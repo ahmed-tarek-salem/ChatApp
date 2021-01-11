@@ -4,6 +4,7 @@ Flutter chat app linked to firebase firestore and firebase storage as database, 
 
 ## Feautres
 - Full authentication with firebase containing (Sign in, Sign up, logout).
+- Save the user data when sign up or log in for the first time to keep logged in using SharedPreferences.
 - Back end validation and error handling incase of wrong inputs or technical issue.
 - Updating profile info like status, username and user's profile image.
 - Searching for users by username ontime.
@@ -15,6 +16,8 @@ Flutter chat app linked to firebase firestore and firebase storage as database, 
 - Uploading posts with description and location, and ability to remove them later.
 - Exploring posts and searching for some keyword.
 
+## Screenshots
+<img src='Screenshots/sc1.jpg' width="300" />
 
 
 ## Getting Started
