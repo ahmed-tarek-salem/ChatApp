@@ -17,20 +17,20 @@ Flutter chat app linked to firebase firestore and firebase storage as database, 
 - Exploring posts and searching for some keyword.
 
 ## Screenshots
-<img src='Screenshots/sc1.jpg' width="600" />
-<img src='Screenshots/sc2.jpg' width="300" />
-<img src='Screenshots/sc3.jpg' width="300" />
-<img src='Screenshots/sc4.jpg' width="300" />
-<img src='Screenshots/sc5.jpg' width="300" />
-<img src='Screenshots/sc6.jpg' width="300" />
-<img src='Screenshots/sc7.jpg' width="300" />
-<img src='Screenshots/sc8.jpg' width="300" />
-<img src='Screenshots/sc9.jpg' width="300" />
-<img src='Screenshots/sc10.jpg' width="300" />
-<img src='Screenshots/sc11.jpg' width="300" />
-<img src='Screenshots/sc12.jpg' width="300" />
-<img src='Screenshots/sc13.jpg' width="300" />
-<img src='Screenshots/sc14.jpg' width="300" />
+<img src='Screenshots/sc1.jpg' width="800" />
+<img src='Screenshots/sc2.jpg' width="800" />
+<img src='Screenshots/sc3.jpg' width="800" />
+<img src='Screenshots/sc4.jpg' width="800" />
+<img src='Screenshots/sc5.jpg' width="800" />
+<img src='Screenshots/sc6.jpg' width="800" />
+<img src='Screenshots/sc7.jpg' width="800" />
+<img src='Screenshots/sc8.jpg' width="800" />
+<img src='Screenshots/sc9.jpg' width="800" />
+<img src='Screenshots/sc10.jpg' width="800" />
+<img src='Screenshots/sc11.jpg' width="800" />
+<img src='Screenshots/sc12.jpg' width="800" />
+<img src='Screenshots/sc13.jpg' width="800" />
+<img src='Screenshots/sc14.jpg' width="800" />
 
 
 
