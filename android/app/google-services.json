@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1063685021298",
+    "firebase_url": "https://chatappfromscratch.firebaseio.com",
+    "project_id": "chatappfromscratch",
+    "storage_bucket": "chatappfromscratch.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1063685021298:android:df2e65a6c7e6c6d30caceb",
+        "android_client_info": {
+          "package_name": "com.ahmedtsalem.ChatApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1063685021298-p8nn4f6q1ipfau01364bk6tpvbu2ud1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmk5gvSbfL97WJirZXk0ZUtoHHjw4a4mo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1063685021298-p8nn4f6q1ipfau01364bk6tpvbu2ud1c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
