@@ -5,14 +5,14 @@ Flutter chat app linked to firebase firestore and firebase storage as database, 
 ## Feautres
 - Full authentication with firebase containing (Sign in, Sign up, logout).
 - Save the user data when sign up or log in for the first time to keep logged in using SharedPreferences.
-- Back end validation and error handling incase of wrong inputs or technical issue.
+- Back end validation and error handling incase of wrong inputs or technical issues.
 - Updating profile info like status, username and user's profile image.
-- Searching for users by username ontime.
+- Searching for users by username.
 - Real-time messages with immediate response using streams.
-- User freindly screens with some smooth animations like Hero animation.
+- User friendly screens with some smooth animations like Hero animation.
 - Beautiful UI and color alerting when receiving unseen messages.
 - Exploring other user's profiles and ability to know whether they offline or online.
-- Get Location with geoloactor to get latitude and longitude and geocoding to determine your exact adress.
+- Get Location with geoloactor to get latitude and longitude and geocoding to determine your exact address.
 - Uploading posts with description and location, and ability to remove them later.
 - Exploring posts and searching for some keyword.
 
