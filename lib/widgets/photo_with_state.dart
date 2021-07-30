@@ -1,13 +1,14 @@
 import 'package:ChatApp/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:sizer/sizer.dart';
 
 class PhotoWithState extends StatefulWidget {
-  final bool state;
-  final String photoUrl;
-  final double radius;
-  final double radiusOfBall;
-  final Color colorOfBall;
+  final bool? state;
+  final String? photoUrl;
+  final double? radius;
+  final double? radiusOfBall;
+  final Color? colorOfBall;
   PhotoWithState(
       {this.photoUrl,
       this.radius,
@@ -28,27 +29,48 @@ class _PhotoWithStateState extends State<PhotoWithState> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        CircleAvatar(
-          radius: widget.radius,
-          // backgroundImage: NetworkImage(
-          //   widget.photoUrl,
-          // ),
-          backgroundImage: OptimizedCacheImageProvider(widget.photoUrl,
-              cacheHeight: 50, cacheWidth: 50),
+        // ClipOval(
+        //   child:
+        //       CachedNetworkImage(imageUrl: widget.photoUrl!, fit: BoxFit.cover),
+        // ),
+        // Container(
+        //   width: 8.0.h,
+        //   height: 8.0.h,
+        //   decoration: BoxDecoration(
+        //     shape: BoxShape.circle,
+        //     image: DecorationImage(
+        //       fit: BoxFit.cover,
+        //       image: CachedNetworkImageProvider(
+        //         widget.photoUrl!,
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8.5.h),
+          child: CachedNetworkImage(
+            height: 8.5.h,
+            width: 8.5.h,
+            fit: BoxFit.cover,
+            imageUrl: widget.photoUrl!,
+            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            maxHeightDiskCache: 80,
+            maxWidthDiskCache: 80,
+          ),
         ),
         // CircleAvatar(
         //   radius: widget.radius,
         //   backgroundImage: CachedNetworkImageProvider(
-        //     widget.photoUrl,
-
-        //     ),
+        //     widget.photoUrl!,
+        //   ),
         // ),
         Positioned(
             right: -3,
             bottom: 0,
             child: CircleAvatar(
               backgroundColor: widget.colorOfBall,
-              radius: widget.radiusOfBall + 3,
+              radius: widget.radiusOfBall! + 3,
               child: CircleAvatar(
                   radius: widget.radiusOfBall,
                   backgroundColor:
