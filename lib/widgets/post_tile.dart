@@ -1,13 +1,15 @@
 import 'package:ChatApp/constants.dart';
 import 'package:ChatApp/models/post.dart';
 import 'package:ChatApp/models/user.dart';
-import 'package:ChatApp/screens/chat_room.dart';
+import 'package:ChatApp/providers/user_provider.dart';
+import 'package:ChatApp/screens/home_page.dart';
 import 'package:ChatApp/screens/image.dart';
 import 'package:ChatApp/widgets/photo_with_state.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:optimized_cached_image/image_provider/optimized_cached_image_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class PostTile extends StatefulWidget {
@@ -19,7 +21,7 @@ class PostTile extends StatefulWidget {
 }
 
 class _PostTileState extends State<PostTile> {
-  User myUser;
+  User? myUser;
   void setStateIfMounted(f) {
     if (mounted) setState(f);
   }
@@ -30,7 +32,6 @@ class _PostTileState extends State<PostTile> {
     setStateIfMounted(() {
       myUser = myUserTest;
     });
-    print(myUser.username);
   }
 
   handleDeletePost(BuildContext parentContext) {
@@ -64,7 +65,7 @@ class _PostTileState extends State<PostTile> {
       doc.reference.delete();
     }
     //delete uploaded image from storage
-    StorageReference firebaseStorageRef =
+    Reference firebaseStorageRef =
         FirebaseStorage.instance.ref().child('image_${widget.myPost.postId}');
     await firebaseStorageRef.delete();
 
@@ -101,7 +102,7 @@ class _PostTileState extends State<PostTile> {
                   Row(
                     children: [
                       PhotoWithState(
-                        photoUrl: myUser.photo,
+                        photoUrl: myUser!.photo,
                         colorOfBall: Colors.white,
                         radius: 30,
                         radiusOfBall: 7,
@@ -113,7 +114,7 @@ class _PostTileState extends State<PostTile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            myUser.username,
+                            myUser!.username!,
                             style:
                                 myGoogleFont(Colors.black, 20, FontWeight.w500),
                           ),
@@ -129,7 +130,8 @@ class _PostTileState extends State<PostTile> {
                       ),
                     ],
                   ),
-                  widget.myPost.ownerId != myCurrentUser.uid
+                  widget.myPost.ownerId !=
+                          Provider.of<UserProvider>(context).myUser?.uid
                       ? Container()
                       : GestureDetector(
                           onTap: () {
@@ -163,7 +165,7 @@ class _PostTileState extends State<PostTile> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 0, left: 5, bottom: 5),
-                    child: Text(widget.myPost.des,
+                    child: Text(widget.myPost.des!,
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           color: Colors.black,
@@ -185,13 +187,14 @@ class _PostTileState extends State<PostTile> {
                 }),
               );
             },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(0),
-              child: Image(
-                fit: BoxFit.cover,
-                image: OptimizedCacheImageProvider(widget.myPost.mediaUrl,
-                    cacheWidth: 50, cacheHeight: 50),
-              ),
+            child: CachedNetworkImage(
+              fit: BoxFit.cover,
+              imageUrl: widget.myPost.mediaUrl!,
+              placeholder: (context, url) =>
+                  Center(child: CircularProgressIndicator()),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+              maxHeightDiskCache: 300,
+              maxWidthDiskCache: 300,
             ),
           ),
         ),
@@ -208,7 +211,7 @@ class _PostTileState extends State<PostTile> {
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        widget.myPost.location.toUpperCase(),
+                        widget.myPost.location!.toUpperCase(),
                         style: myGoogleFont(kGreenColor, 15, FontWeight.w700),
                       ),
                     )

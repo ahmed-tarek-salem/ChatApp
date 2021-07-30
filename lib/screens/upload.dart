@@ -1,24 +1,35 @@
 import 'dart:io';
-import 'package:ChatApp/screens/chat_room.dart';
+import 'package:ChatApp/models/user.dart';
+import 'package:ChatApp/providers/user_provider.dart';
+import 'package:ChatApp/screens/home_page.dart';
 import 'package:ChatApp/widgets/submit_button.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:optimized_cached_image/image_provider/optimized_cached_image_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class Upload extends StatefulWidget {
-  File file;
+  File? file;
   Upload(this.file);
   @override
   _UploadState createState() => _UploadState();
 }
 
 class _UploadState extends State<Upload> {
+  User? userUploadingPost;
   bool isUploading = false;
   TextEditingController locationController = TextEditingController();
   TextEditingController captionController = TextEditingController();
   String postId = Uuid().v4();
+
+  @override
+  void initState() {
+    userUploadingPost =
+        Provider.of<UserProvider>(context, listen: false).myUser;
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -42,7 +53,8 @@ class _UploadState extends State<Upload> {
     List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark placemark = placemarks[0];
-    String formattedPlace = '${placemark.locality} , ${placemark.country}';
+    String formattedPlace =
+        ' ${placemark.country}, ${placemark.locality}, ${placemark.street}';
     locationController.text = formattedPlace;
   }
 
@@ -51,11 +63,13 @@ class _UploadState extends State<Upload> {
       isUploading = true;
     });
     //await compressImage();
+    print('Oneeeeeeeeeeeeeeeeeeeeeeeeeeeee');
     String photoUrl =
         await databaseMethods.uploadImageToStorge(widget.file, postId);
+    print('Is Goinnnnnnnnnnnnnnnnnnnnng');
     databaseMethods.createPostInFirestore(
-        currentUserId: myCurrentUser.uid,
-        currentUsername: myCurrentUser.username,
+        currentUserId: userUploadingPost!.uid,
+        currentUsername: userUploadingPost!.username,
         description: captionController.text,
         location: locationController.text,
         mediaUrl: photoUrl,
@@ -88,7 +102,7 @@ class _UploadState extends State<Upload> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: FileImage(widget.file),
+                        image: FileImage(widget.file!),
                       ),
                     ),
                   ),
@@ -98,8 +112,7 @@ class _UploadState extends State<Upload> {
             SizedBox(height: 15),
             ListTile(
               leading: CircleAvatar(
-                backgroundImage:
-                    OptimizedCacheImageProvider(myCurrentUser.photo),
+                backgroundImage: NetworkImage(userUploadingPost!.photo!),
                 radius: 35,
               ),
               title: TextField(

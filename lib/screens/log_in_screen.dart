@@ -1,5 +1,7 @@
 import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/screens/chat_room.dart';
+import 'package:ChatApp/models/user.dart';
+import 'package:ChatApp/providers/user_provider.dart';
+import 'package:ChatApp/screens/home_page.dart';
 import 'package:ChatApp/screens/sign_up_screen.dart';
 import 'package:ChatApp/services/auth.dart';
 import 'package:ChatApp/services/shared_pref.dart';
@@ -7,6 +9,8 @@ import 'package:ChatApp/widgets/submit_button.dart';
 import 'package:ChatApp/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 class LogInScreen extends StatefulWidget {
   @override
@@ -28,7 +32,7 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   logIn(BuildContext context) async {
-    if (formkey.currentState.validate()) {
+    if (formkey.currentState!.validate()) {
       setState(() {
         isLoading = true;
       });
@@ -58,10 +62,14 @@ class _LogInScreenState extends State<LogInScreen> {
               );
             });
       } else {
-        SharedPref().markTheUser(uid);
+        await SharedPref().markTheUser(uid);
+        User user = await Provider.of<UserProvider>(context, listen: false)
+            .defineUser(uid);
+        print(user.photo);
+
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
-          return ChatRoom(uid);
+          return HomePage();
         }));
       }
     }
@@ -69,120 +77,127 @@ class _LogInScreenState extends State<LogInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: isLoading
-            ? Container(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            : SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Container(
-                  child: Column(
-                    children: [
-                      Stack(
-                        children: [
-                          Container(
-                            height: 310,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(40),
-                                bottomRight: Radius.circular(40),
-                              ),
-                              child: Image(
-                                image: AssetImage('images/photo6.png'),
-                                height: 310,
+    return SafeArea(
+      child: Scaffold(
+          body: isLoading
+              ? Container(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Stack(
+                          children: [
+                            Container(
+                              height: 45.5.h,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(30.0.sp),
+                                  bottomRight: Radius.circular(30.0.sp),
+                                ),
+                                child: Image(
+                                  image: AssetImage('images/photo6.png'),
+                                  height: 45.5.h,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                ),
                               ),
                             ),
-                          ),
-                          Container(
-                            height: 310,
-                            decoration: BoxDecoration(
+                            Container(
+                              height: 45.5.h,
+                              decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(40),
-                                  bottomRight: Radius.circular(40),
+                                  bottomLeft: Radius.circular(30.0.sp),
+                                  bottomRight: Radius.circular(30.0.sp),
                                 ),
-                                color: Colors.black26),
-                          ),
-                          Positioned(
-                            bottom: 10,
-                            left: 100,
-                            child: Row(
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 10,
+                              left: 23.0.w,
+                              child: Row(
+                                children: [
+                                  Text('Not a member? ',
+                                      style: myGoogleFont(Colors.white, 12.3.sp,
+                                          FontWeight.w300)),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return SignUpScreen();
+                                      }));
+                                    },
+                                    child: Text('Sign up',
+                                        style: myGoogleFont(Colors.greenAccent,
+                                            14.0.sp, FontWeight.w500)),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 2.5.h),
+                          child: Text('Log in',
+                              style: myGoogleFont(
+                                  Colors.black45, 19.0.sp, FontWeight.w400)),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.5.w),
+                          child: Form(
+                            key: formkey,
+                            child: Column(
                               children: [
-                                Text('Not a member? ',
-                                    style: myGoogleFont(
-                                        Colors.white, 16, FontWeight.w300)),
+                                MyTextField(
+                                    'Email', Colors.grey[300], false, email,
+                                    (email) {
+                                  bool emailValid = RegExp(
+                                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                      .hasMatch(email);
+                                  if (!emailValid)
+                                    return 'Please enter a valid email';
+                                }),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                MyTextField('Password', Colors.grey[300], true,
+                                    password, (password) {
+                                  return password.length == 0
+                                      ? 'Please enter a password'
+                                      : null;
+                                }),
+                                SizedBox(
+                                  height: 2.5.h,
+                                ),
                                 GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return SignUpScreen();
-                                    }));
-                                  },
-                                  child: Text('Sign up',
-                                      style: myGoogleFont(Colors.greenAccent,
-                                          18, FontWeight.w500)),
+                                    onTap: () {
+                                      logIn(context);
+                                    },
+                                    child: SubmitButton('Log in')),
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text(
+                                  'Forgot Password?',
+                                  style: GoogleFonts.montserrat(
+                                      textStyle: TextStyle(color: kGreenColor),
+                                      fontSize: 12.0.sp),
+                                ),
+                                const SizedBox(
+                                  height: 10.0,
                                 ),
                               ],
                             ),
-                          )
-                        ],
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 30),
-                        child: Text('Log in',
-                            style: myGoogleFont(
-                                Colors.black45, 25, FontWeight.w400)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                        child: Form(
-                          key: formkey,
-                          child: Column(
-                            children: [
-                              MyTextField(
-                                  'Email', Colors.grey[300], false, email,
-                                  (email) {
-                                bool emailValid = RegExp(
-                                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                    .hasMatch(email);
-                                if (!emailValid)
-                                  return 'Please enter a valid email';
-                              }),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              MyTextField(
-                                  'Password', Colors.grey[300], true, password,
-                                  (password) {
-                                return password.length == 0
-                                    ? 'Please enter a password'
-                                    : null;
-                              }),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              GestureDetector(
-                                  onTap: () {
-                                    logIn(context);
-                                  },
-                                  child: SubmitButton('Log in')),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Text(
-                                'Forgot Password?',
-                                style: GoogleFonts.montserrat(
-                                    textStyle: TextStyle(color: kGreenColor)),
-                              )
-                            ],
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ));
+                )),
+    );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:ChatApp/screens/chat_room.dart';
+import 'package:ChatApp/screens/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthMethods {
@@ -8,13 +8,12 @@ class AuthMethods {
     try {
       var result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      User firebaseUser = result.user;
+      User firebaseUser = result.user!;
       //  await refUsers.doc(firebaseUser.uid).update({
       //   'state': true
       // });
       return firebaseUser.uid;
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -23,7 +22,7 @@ class AuthMethods {
     try {
       var result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      User firebaseUser = result.user;
+      User firebaseUser = result.user!;
       await refUsers.doc(firebaseUser.uid).update({'state': true});
       return firebaseUser.uid;
     } catch (e) {

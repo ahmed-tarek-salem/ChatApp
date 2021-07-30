@@ -7,7 +7,7 @@ import 'package:ChatApp/widgets/post_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ChatApp/screens/chat_room.dart';
+import 'package:ChatApp/screens/home_page.dart';
 
 class NewsFeed extends StatefulWidget {
   @override
@@ -15,8 +15,8 @@ class NewsFeed extends StatefulWidget {
 }
 
 class _NewsFeedState extends State<NewsFeed> {
-  File file;
-  Stream<QuerySnapshot> mySnapshot;
+  File? file;
+  Stream<QuerySnapshot>? mySnapshot;
   void setStateIfMounted(f) {
     if (mounted) setState(f);
   }
@@ -24,24 +24,34 @@ class _NewsFeedState extends State<NewsFeed> {
   imageFromGallery(context) async {
     Navigator.pop(context);
     final pickedFile = await ImagePicker()
-        .getImage(source: ImageSource.gallery, imageQuality: 85);
-    setStateIfMounted(() {
-      file = File(pickedFile.path);
-    });
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return Upload(file);
-    }));
+        .getImage(source: ImageSource.gallery, imageQuality: 70);
+    if (pickedFile != null)
+      setStateIfMounted(
+        () {
+          file = File(pickedFile.path);
+        },
+      );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return Upload(file);
+        },
+      ),
+    );
   }
 
   imageFromCamera(context) async {
     Navigator.pop(context);
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
-    setStateIfMounted(() {
-      file = File(pickedFile.path);
-    });
+    final pickedFile = await ImagePicker()
+        .getImage(source: ImageSource.camera, imageQuality: 70);
+    if (pickedFile != null)
+      setStateIfMounted(() {
+        file = File(pickedFile.path);
+      });
   }
 
-  Future<File> selectImage(parentContext) async {
+  Future<File?> selectImage(parentContext) async {
     return await showDialog(
         context: parentContext,
         builder: (context) {
@@ -121,7 +131,7 @@ class _NewsFeedState extends State<NewsFeed> {
                       filled: true,
                       enabledBorder: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.grey[100], width: 1)),
+                              BorderSide(color: Colors.grey[100]!, width: 1)),
                       hintText: 'Search',
                       hintStyle: TextStyle(
                         color: Colors.grey[400],
@@ -135,7 +145,7 @@ class _NewsFeedState extends State<NewsFeed> {
                           myGoogleFont(Colors.red, 14, FontWeight.w500)),
                 ),
               ),
-              StreamBuilder(
+              StreamBuilder<QuerySnapshot>(
                 stream: mySnapshot == null
                     ? refPosts
                         .orderBy('timestamp', descending: true)
@@ -150,9 +160,9 @@ class _NewsFeedState extends State<NewsFeed> {
                     return ListView.builder(
                         shrinkWrap: true,
                         physics: ClampingScrollPhysics(),
-                        itemCount: snapshot.data.docs.length,
+                        itemCount: (snapshot.data!).docs.length,
                         itemBuilder: (context, index) {
-                          DocumentSnapshot doc = snapshot.data.docs[index];
+                          DocumentSnapshot doc = (snapshot.data!).docs[index];
                           Post myPost = Post.fromDocument(doc);
                           return PostTile(myPost);
                         });

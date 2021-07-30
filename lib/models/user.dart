@@ -1,12 +1,12 @@
 import 'dart:core';
 class User{
 
-  String uid;
-  String username;
-  String bio;
-  String email;
-  String photo;
-  bool state;
+  String? uid;
+  String? username;
+  String? bio;
+  String? email;
+  String? photo;
+  bool? state;
 
   User({
     this.uid,

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:ChatApp/message.dart';
@@ -21,20 +22,47 @@ class DatabaseMethods {
     return FirebaseFirestore.instance.collection('users').doc(uid).set(userMap);
   }
 
-  Future<String> uploadImageToStorge(imageFile, userId) async {
-    StorageReference firebaseStorageRef =
-        // FirebaseStorage.instance.ref().child('uploads/$fileName');
-        FirebaseStorage.instance.ref().child('image_$userId');
-    StorageUploadTask uploadTask = firebaseStorageRef.putFile(imageFile);
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-    String photoUrl = await taskSnapshot.ref.getDownloadURL();
-    return photoUrl;
+  getUserInfo(String? uid) async {
+    DocumentSnapshot doc = await refUsers.doc(uid).get();
+    return am.User.fromDocument(doc);
   }
 
-  upDateUsersInfo(userId, url, String myBio, String myUsername) {
-    refUsers
-        .doc(userId)
-        .update({'photo': url, 'bio': myBio, 'username': myUsername});
+  Future<String> uploadImageToStorge(File? imageFile, String imageId) async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference ref = storage.ref().child('image_$imageId');
+    TaskSnapshot taskSnapshot = await ref.putFile(imageFile!);
+    return await taskSnapshot.ref.getDownloadURL();
+    //الفرق بين uploadTask و TaskSnapshot ال await
+  }
+
+  upDateUsersInfo(am.User updatedUser, String currentUserId) {
+    try {
+      refUsers.doc(currentUserId).update(
+        {
+          'photo': updatedUser.photo,
+          'bio': updatedUser.bio,
+          'username': updatedUser.username
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<List<String>> allUsers(am.User currentUser) async {
+    List<String> listOfUsers = [];
+    try {
+      QuerySnapshot querySnapshot =
+          await refUsers.where('uid', isNotEqualTo: currentUser.uid).get();
+      for (int i = 0; i < querySnapshot.docs.length; i++) {
+        listOfUsers.add(querySnapshot.docs[i]['username']);
+      }
+      print(listOfUsers);
+      return listOfUsers;
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
   }
 
   //setPhotoToFirebase(String uid, var url){
@@ -62,8 +90,8 @@ class DatabaseMethods {
   }
 
   sendMessage(String userMessageName, String myCurrentUserName, String message,
-      String myCurrentUserUid, bool isPhoto, int counter) async {
-    String fullname = returnName(userMessageName, myCurrentUserName);
+      String? myCurrentUserUid, bool isPhoto, int counter) async {
+    String fullname = returnNameOfChat(userMessageName, myCurrentUserName);
     await refChats.doc(fullname).collection('chatmessages').add({
       'message': message,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -74,8 +102,11 @@ class DatabaseMethods {
     await increaseCount(counter, userMessageName, myCurrentUserName);
 
     //send message to last messages collection
-    await refChats.doc(fullname).collection('unseenmessages').doc('lastmessage')
-    .set({
+    await refChats
+        .doc(fullname)
+        .collection('unseenmessages')
+        .doc('lastmessage')
+        .set({
       'message': message,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'sentby': myCurrentUserUid,
@@ -83,9 +114,7 @@ class DatabaseMethods {
     });
   }
 
- 
-
-  returnName(String name1, String name2) {
+  returnNameOfChat(String name1, String name2) {
     int numberr = [name1.length, name2.length].reduce(min);
     for (int i = 0; i < numberr; i++) {
       if (name1[i].codeUnitAt(0) < name2[i].codeUnitAt(0)) {
@@ -97,9 +126,24 @@ class DatabaseMethods {
     return '$name1 _ $name2'.trim();
   }
 
+  // listOfLastMessages(List<String> chatNames) async {
+  //   Map<String, String> mapOfChatNamesAndLastMessages = {};
+  //   for (int i = 0; i < chatNames.length; i++) {
+  //     DocumentSnapshot documentSnapshot = await refChats
+  //         .doc(chatNames[i])
+  //         .collection('unseenmessages')
+  //         .doc('lastmessage')
+  //         .get();
+  //     String lastMessage = documentSnapshot['message'];
+  //     mapOfChatNamesAndLastMessages.putIfAbsent(
+  //         chatNames[i], () => lastMessage);
+  //   }
+  //   print(mapOfChatNamesAndLastMessages);
+  // }
+
   increaseCount(
       int count, String userMessageName, String myCurrentUserName) async {
-    String fullname = returnName(userMessageName, myCurrentUserName);
+    String fullname = returnNameOfChat(userMessageName, myCurrentUserName);
     await refChats
         .doc(fullname)
         .collection('unseenmessages')
@@ -107,83 +151,107 @@ class DatabaseMethods {
         .set({'count': count + 1});
   }
 
-  Future<int> getCount(String userMessageName, String myCurrentUserName) async {
-    int myCount;
-    String fullname = returnName(userMessageName, myCurrentUserName);
-    DocumentSnapshot doc = await refChats
-        .doc(fullname)
-        .collection('unseenmessages')
-        .doc(userMessageName)
-        .get();
-    if (doc.exists) {
-      myCount = doc['count'];
-    } else {
-      myCount = 0;
+  Future<int?> getCount(
+      String userMessageName, String myCurrentUserName) async {
+    try {
+      int? myCount;
+      String fullname = returnNameOfChat(userMessageName, myCurrentUserName);
+      DocumentSnapshot doc = await refChats
+          .doc(fullname)
+          .collection('unseenmessages')
+          .doc(userMessageName)
+          .get();
+      if (doc.exists) {
+        myCount = doc['count'];
+      } else {
+        myCount = 0;
+      }
+      return myCount;
+    } catch (e) {
+      print(e);
     }
-    return myCount;
   }
 
-  Future<Message> getLastMessage(String userMessageName, String myCurrentUserName)
-  async{
-    String fullname = returnName(userMessageName, myCurrentUserName);
-    DocumentSnapshot doc= await refChats.doc(fullname)
-    .collection('unseenmessages')
-    .doc('lastmessage')
-    .get();
-    if(doc.exists){
-      Message myMessage =Message.fromDocument(doc);
-      return myMessage;
+  Future<Message?> getLastMessage(
+      String userMessageName, String myCurrentUserName) async {
+    try {
+      String fullname = returnNameOfChat(userMessageName, myCurrentUserName);
+      DocumentSnapshot doc = await refChats
+          .doc(fullname)
+          .collection('unseenmessages')
+          .doc('lastmessage')
+          .get();
+      if (doc.exists) {
+        Message myMessage = Message.fromDocument(doc);
+        return myMessage;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print(e);
     }
-    else{
-      return null;
-    }
-
-
   }
 
   clearCount(String userMessageName, String myCurrentUserName) async {
-    String fullname = returnName(userMessageName, myCurrentUserName);
-    await refChats
-        .doc(fullname)
-        .collection('unseenmessages')
-        .doc(myCurrentUserName)
-        .set({'count': 0});
+    try {
+      String fullname = returnNameOfChat(userMessageName, myCurrentUserName);
+      await refChats
+          .doc(fullname)
+          .collection('unseenmessages')
+          .doc(myCurrentUserName)
+          .set({'count': 0});
+    } catch (e) {
+      print(e);
+    }
   }
 
-  logOut(String uid) async {
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    await refUsers.doc(uid).update({'state': false});
-    await _auth.signOut();
+  logOut(String? uid) async {
+    try {
+      FirebaseAuth _auth = FirebaseAuth.instance;
+      await refUsers.doc(uid).update({'state': false});
+      await _auth.signOut();
+      print('Logged out');
+    } catch (e) {
+      print(e);
+    }
   }
 
   addToNewsFeed(String idOfNotifier) async {
-    DocumentSnapshot doc = await refUsers.doc(idOfNotifier).get();
-    am.User myUser = am.User.fromDocument(doc);
-    await refFeeds.doc(idOfNotifier).set({
-      'timestamp': DateTime.now(),
-      'type': 'update',
-      'username': myUser.username,
-      'photo': myUser.photo
-    });
+    try {
+      DocumentSnapshot doc = await refUsers.doc(idOfNotifier).get();
+      am.User myUser = am.User.fromDocument(doc);
+      await refFeeds.doc(idOfNotifier).set({
+        'timestamp': DateTime.now(),
+        'type': 'update',
+        'username': myUser.username,
+        'photo': myUser.photo
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   createPostInFirestore(
-      {String mediaUrl,
-      String location,
-      String description,
-      String currentUserId,
-      String currentUsername,
+      {String? mediaUrl,
+      String? location,
+      String? description,
+      String? currentUserId,
+      String? currentUsername,
       var timeStamp,
-      String postId}) async {
-    await refPosts.doc(postId).set({
-      "postId": postId,
-      "ownerId": currentUserId,
-      "username": currentUsername,
-      "mediaUrl": mediaUrl,
-      "description": description,
-      "location": location,
-      "timestamp": timeStamp,
-    });
+      String? postId}) async {
+    try {
+      await refPosts.doc(postId).set({
+        "postId": postId,
+        "ownerId": currentUserId,
+        "username": currentUsername,
+        "mediaUrl": mediaUrl,
+        "description": description,
+        "location": location,
+        "timestamp": timeStamp,
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   //we stopped here

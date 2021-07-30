@@ -1,9 +1,10 @@
 import 'package:ChatApp/constants.dart';
 import 'package:ChatApp/models/user.dart';
-import 'package:ChatApp/screens/chat.dart';
+import 'package:ChatApp/screens/single_chat_room.dart';
 import 'package:ChatApp/widgets/submit_button.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:optimized_cached_image/image_provider/optimized_cached_image_provider.dart';
+import 'package:sizer/sizer.dart';
 
 class UserProfile extends StatefulWidget {
   final User myUser;
@@ -13,7 +14,7 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
-  User myUser;
+  User? myUser;
 
   // @override
   // void dispose() {
@@ -29,11 +30,14 @@ class _UserProfileState extends State<UserProfile> {
         children: [
           Hero(
             tag: 'ProfilePhoto',
-               child: Image(
-              height: 500,
+            child: CachedNetworkImage(
+              height: 70.0.h,
               width: double.infinity,
-              image: OptimizedCacheImageProvider(widget.myUser.photo),
               fit: BoxFit.cover,
+              imageUrl: widget.myUser.photo!,
+              placeholder: (context, url) =>
+                  Center(child: CircularProgressIndicator()),
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
           ),
           Container(
@@ -66,11 +70,11 @@ class _UserProfileState extends State<UserProfile> {
             child: Column(
           children: [
             Text(
-              widget.myUser.username,
+              widget.myUser.username!,
               style: myGoogleFont(Colors.black, 30, FontWeight.w500),
             ),
             Text(
-              widget.myUser.bio,
+              widget.myUser.bio!,
               textAlign: TextAlign.center,
               style: myGoogleFont(Colors.grey[550], 15, FontWeight.w400),
             ),
@@ -84,7 +88,7 @@ class _UserProfileState extends State<UserProfile> {
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return Chat(widget.myUser);
+                      return SingleChatRoom(widget.myUser);
                     }));
                   },
                   child: SubmitButton('Send Message',

@@ -1,8 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPref {
-  SharedPreferences logindata;
-  bool newuser;
+  SharedPreferences? logindata;
+  bool? newuser;
 
   markTheUser(String userId) async {
     final prefs = await SharedPreferences.getInstance();

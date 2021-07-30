@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post{
-  String ownerId;
-  String postId;
-  String location;
+  String? ownerId;
+  String? postId;
+  String? location;
   var timeStamp;
-  String username;
-  String des;
-  String mediaUrl;
-  int likesCount;
+  String? username;
+  String? des;
+  String? mediaUrl;
+  int? likesCount;
   
 
   Post({

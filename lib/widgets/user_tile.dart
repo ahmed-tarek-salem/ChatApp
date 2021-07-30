@@ -1,10 +1,14 @@
 import 'package:ChatApp/constants.dart';
 import 'package:ChatApp/message.dart';
 import 'package:ChatApp/models/user.dart';
-import 'package:ChatApp/screens/chat.dart';
-import 'package:ChatApp/screens/chat_room.dart';
+import 'package:ChatApp/providers/messages_provider.dart';
+import 'package:ChatApp/providers/user_provider.dart';
+import 'package:ChatApp/screens/single_chat_room.dart';
+import 'package:ChatApp/screens/home_page.dart';
 import 'package:ChatApp/widgets/photo_with_state.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 class UserTile extends StatefulWidget {
   final User messageUser;
@@ -14,100 +18,126 @@ class UserTile extends StatefulWidget {
 }
 
 class _MessageTileState extends State<UserTile> {
-  Message myMessage;
-   void setStateIfMounted(f) {
-  if (mounted) setState(f);
-}
-  int count;
+  Message? myMessage;
+  User? currentUser;
+  var messagesProvider;
+
+  void setStateIfMounted(f) {
+    if (mounted) setState(f);
+  }
+
+  int? count;
   getCountofUnseenMsgs() async {
-    int testCount = await databaseMethods.getCount(
-        myCurrentUser.username, widget.messageUser.username);
+    int? testCount = await databaseMethods.getCount(
+        currentUser!.username!, widget.messageUser.username!);
     setStateIfMounted(() {
       count = testCount;
     });
   }
-  getLastMessage()async{
-    Message myTestMessage = await databaseMethods.
-    getLastMessage(widget.messageUser.username, myCurrentUser.username);
+
+  getLastMessage() async {
+    Message? myTestMessage = await databaseMethods.getLastMessage(
+        widget.messageUser.username!, currentUser!.username!);
     setStateIfMounted(() {
-      myMessage= myTestMessage;
+      myMessage = myTestMessage;
     });
-    
   }
 
   @override
-  void initState() {
-    getCountofUnseenMsgs();
+  void didChangeDependencies() {
+    currentUser = Provider.of<UserProvider>(context, listen: false).myUser;
+    // messagesProvider = Provider.of<MessagesProvider>(context, listen: false);
+    // messagesProvider.getNumberOfUnseenMessages(
+    //     widget.messageUser, currentUser!);
     getLastMessage();
-    super.initState();
+    getCountofUnseenMsgs();
+    super.didChangeDependencies();
   }
-  //  @override
-  // void dispose() {
-  //   getCountofUnseenMsgs();
-  //   super.dispose();
-  // }
+
+  @override
+  void dispose() {
+    getCountofUnseenMsgs();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) {
+        //       return SingleChatRoom(widget.messageUser);
+        //     },
+        //   ),
+        // );
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return Chat(
+          return SingleChatRoom(
             widget.messageUser,
           );
-        })).then((value) {
-          if (value){ getCountofUnseenMsgs();
-           getLastMessage();
-          }
-        });
+        })).then(
+          (value) {
+            if (value == true) {
+              getCountofUnseenMsgs();
+              getLastMessage();
+            } else {
+              getCountofUnseenMsgs();
+              getLastMessage();
+            }
+          },
+        );
       },
       child: Container(
         color: count == 0 || count == null ? Colors.white : Colors.black,
-        child:
-         Padding(
-          padding: const EdgeInsets.only(
-            top: 4.0,
-            bottom: 4
-          ),
+        child: Padding(
+          padding: EdgeInsets.only(top: 0.6.h, bottom: 0.6.h),
           child: Container(
-            height: 80,
+            height: 12.0.h,
             width: double.infinity,
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 33),
+                padding: EdgeInsets.symmetric(horizontal: 8.25.w),
                 child: Center(
                   child: ListTile(
                     leading: PhotoWithState(
                       state: widget.messageUser.state,
                       photoUrl: widget.messageUser.photo,
-                      radius: 30,
-                      radiusOfBall: 7,
+                      radius: 23.0.sp,
+                      radiusOfBall: 5.3.sp,
                       colorOfBall: count == 0 || count == null
                           ? Colors.white
-                          : Colors.black,
+                          : Colors.green,
                     ),
                     //  CircleAvatar(
                     //   backgroundImage: CachedNetworkImageProvider(widget.messageUser.photo),
                     //   radius: 30,
                     title: Container(
-                      margin: EdgeInsets.only(top:10),
+                      margin: EdgeInsets.only(top: 1.5.h),
                       child: Text(
-                        widget.messageUser.username,
+                        widget.messageUser.username!,
                         style: myGoogleFont(
                             count == 0 ? Colors.black : Colors.white,
-                            16,
+                            12.0.sp,
                             FontWeight.w500),
                       ),
                     ),
                     subtitle: Text(
-                      myMessage != null ? myMessage.message : widget.messageUser.bio,
-                     // overflow: TextOverflow.ellipsis,
+                      myMessage?.message == null
+                          ? ''
+                          : myMessage?.isPhoto == true
+                              ? 'Sent photo'
+                              : myMessage!.message,
+                      // messagesProvider.lastMessage != null
+                      //     ? messagesProvider.lastMessage!.message!
+                      //     : widget.messageUser.bio!,
+                      // overflow: TextOverflow.ellipsis,
                       // maxLines: 2,
                       // softWrap: false,
                       style: myGoogleFont(
                           count != 0 ? Colors.white : Colors.grey[600],
-                          14,
+                          11.0.sp,
                           FontWeight.w400),
-                          overflow: TextOverflow.ellipsis,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     trailing: count == 0 || count == null
                         ? Text('')
