@@ -96,9 +96,12 @@ class _HomePageState extends State<HomePage> {
         showSelectedLabels: false,
         items: [
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.search,
-                size: 30.0.sp,
+              icon: Padding(
+                padding: EdgeInsets.only(left: 2.w),
+                child: Icon(
+                  Icons.search,
+                  size: 30.0.sp,
+                ),
               ),
               label: 'Home'),
           BottomNavigationBarItem(
@@ -114,9 +117,10 @@ class _HomePageState extends State<HomePage> {
                         )
                       : PhotoWithState(
                           colorOfBall: Colors.white,
-                          photoUrl: photoUrl,
+                          photoUrl:
+                              Provider.of<UserProvider>(context).myUser?.photo,
                           radiusOfBall: 0,
-                          radius: 22.0.sp,
+                          radius: 7.5.h,
                           state: true,
                         ),
               //     CircleAvatar(

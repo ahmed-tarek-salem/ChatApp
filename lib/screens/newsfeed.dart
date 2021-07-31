@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ChatApp/screens/home_page.dart';
+import 'package:sizer/sizer.dart';
 
 class NewsFeed extends StatefulWidget {
   @override
@@ -107,16 +108,16 @@ class _NewsFeedState extends State<NewsFeed> {
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 60,
+                height: 9.0.h,
               ),
               Center(
                 child: Text(
                   'Explore',
-                  style: myGoogleFont(Colors.black, 35, FontWeight.w500),
+                  style: myGoogleFont(Colors.black, 26.0.sp, FontWeight.w500),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                padding: EdgeInsets.symmetric(vertical: 3.75.w),
                 child: TextField(
                   onChanged: (value) {
                     Stream<QuerySnapshot> snapshot = refPosts
@@ -142,7 +143,7 @@ class _NewsFeedState extends State<NewsFeed> {
                       errorBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.red, width: 1)),
                       errorStyle:
-                          myGoogleFont(Colors.red, 14, FontWeight.w500)),
+                          myGoogleFont(Colors.red, 12.0.sp, FontWeight.w500)),
                 ),
               ),
               StreamBuilder<QuerySnapshot>(

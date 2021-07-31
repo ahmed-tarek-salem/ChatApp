@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ImageScreen extends StatelessWidget {
@@ -7,8 +8,14 @@ class ImageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Center(
-        child: Image(
-          image: NetworkImage(photoUrl!),
+        child: CachedNetworkImage(
+          imageUrl: photoUrl!,
+          placeholder: (context, url) => Center(
+            child: CircularProgressIndicator(),
+          ),
+          errorWidget: (context, url, error) => Icon(Icons.error),
+          maxHeightDiskCache: 300,
+          maxWidthDiskCache: 300,
         ),
       ),
     );

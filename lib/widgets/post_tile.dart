@@ -11,6 +11,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:sizer/sizer.dart';
 
 class PostTile extends StatefulWidget {
   final Post myPost;
@@ -104,19 +105,19 @@ class _PostTileState extends State<PostTile> {
                       PhotoWithState(
                         photoUrl: myUser!.photo,
                         colorOfBall: Colors.white,
-                        radius: 30,
-                        radiusOfBall: 7,
+                        radius: 40.0.sp,
+                        radiusOfBall: 5.3.sp,
                         state: true,
                       ),
-                      SizedBox(width: 20),
+                      SizedBox(width: 5.0.w),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             myUser!.username!,
-                            style:
-                                myGoogleFont(Colors.black, 20, FontWeight.w500),
+                            style: myGoogleFont(
+                                Colors.black, 15.0.sp, FontWeight.w500),
                           ),
                           Text(
                             timeago.format(
@@ -124,7 +125,7 @@ class _PostTileState extends State<PostTile> {
                                   widget.myPost.timeStamp),
                             ),
                             style: myGoogleFont(
-                                Colors.grey[500], 15, FontWeight.w200),
+                                Colors.grey[500], 12.5.sp, FontWeight.w200),
                           ),
                         ],
                       ),
@@ -140,17 +141,17 @@ class _PostTileState extends State<PostTile> {
                           child: Container(
                             color: Colors.white,
                             padding: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 10),
+                                vertical: 1.5.h, horizontal: 2.5.w),
                             child: Column(
                               children: [
                                 CircleAvatar(
                                   backgroundColor: Colors.grey[300],
-                                  radius: 3,
+                                  radius: 2.5.sp,
                                 ),
                                 SizedBox(height: 8),
                                 CircleAvatar(
                                   backgroundColor: Colors.grey[300],
-                                  radius: 3,
+                                  radius: 2.5.sp,
                                 ),
                               ],
                             ),
@@ -158,7 +159,7 @@ class _PostTileState extends State<PostTile> {
                         )
                 ],
               ),
-        SizedBox(height: 10),
+        SizedBox(height: 1.5.h),
         widget.myPost.des == ""
             ? Container()
             : Row(
@@ -170,14 +171,14 @@ class _PostTileState extends State<PostTile> {
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w700,
-                          fontSize: 15,
+                          fontSize: 12.5.sp,
                         )),
                   ),
                 ],
               ),
         Container(
-          margin: EdgeInsets.symmetric(vertical: 10),
-          height: 350,
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          height: 52.0.h,
           child: GestureDetector(
             onTap: () {
               Navigator.push(
@@ -205,22 +206,23 @@ class _PostTileState extends State<PostTile> {
                   children: [
                     Icon(
                       Icons.location_pin,
-                      size: 35,
+                      size: 26.0.sp,
                       color: kGreenColor,
                     ),
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         widget.myPost.location!.toUpperCase(),
-                        style: myGoogleFont(kGreenColor, 15, FontWeight.w700),
+                        style:
+                            myGoogleFont(kGreenColor, 12.5.sp, FontWeight.w700),
                       ),
                     )
                   ],
                 ),
               ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Divider(),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
       ],
     );
   }

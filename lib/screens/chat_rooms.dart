@@ -73,6 +73,8 @@ class _ChatRoomsState extends State<ChatRooms> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
                           padding: EdgeInsets.symmetric(
@@ -87,20 +89,18 @@ class _ChatRoomsState extends State<ChatRooms> {
                               borderRadius: BorderRadius.circular(15.0.sp)),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 3.25.w, right: 0.5.w),
+                          padding: EdgeInsets.only(
+                              left: 3.25.w, right: 1.5.w, top: 0.5.h),
                           child: Text(
                             'Chats',
                             style: myGoogleFont(
                                 Colors.black, 13.8.sp, FontWeight.w500),
                           ),
                         ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.more_horiz,
-                            color: kGreenColor,
-                            size: 23.0.sp,
-                          ),
-                          onPressed: () {},
+                        Icon(
+                          Icons.more_horiz,
+                          color: kGreenColor,
+                          size: 23.0.sp,
                         ),
                       ],
                     ),

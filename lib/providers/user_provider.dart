@@ -8,15 +8,12 @@ class UserProvider with ChangeNotifier {
   User? myUser;
 
   defineUser(String uid) async {
-    print('Start');
-
     CollectionReference refUsers =
         FirebaseFirestore.instance.collection('users');
     DocumentSnapshot doc = await refUsers.doc(uid).get();
     User thisUser = User.fromDocument(doc);
     myUser = thisUser;
     notifyListeners();
-    print('Done');
     return thisUser;
   }
 

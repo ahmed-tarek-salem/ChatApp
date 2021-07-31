@@ -96,67 +96,141 @@ class _MessageTileState extends State<UserTile> {
             height: 12.0.h,
             width: double.infinity,
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.25.w),
+                padding: EdgeInsets.only(left: 12.5.w, right: 11.25.w),
                 child: Center(
-                  child: ListTile(
-                    leading: PhotoWithState(
-                      state: widget.messageUser.state,
-                      photoUrl: widget.messageUser.photo,
-                      radius: 23.0.sp,
-                      radiusOfBall: 5.3.sp,
-                      colorOfBall: count == 0 || count == null
-                          ? Colors.white
-                          : Colors.green,
-                    ),
-                    //  CircleAvatar(
-                    //   backgroundImage: CachedNetworkImageProvider(widget.messageUser.photo),
-                    //   radius: 30,
-                    title: Container(
-                      margin: EdgeInsets.only(top: 1.5.h),
-                      child: Text(
-                        widget.messageUser.username!,
-                        style: myGoogleFont(
-                            count == 0 ? Colors.black : Colors.white,
-                            12.0.sp,
-                            FontWeight.w500),
+                    child: Container(
+                  child: Row(
+                    children: [
+                      PhotoWithState(
+                        state: widget.messageUser.state,
+                        photoUrl: widget.messageUser.photo,
+                        radius: 8.5.h,
+                        radiusOfBall: 5.4.sp,
+                        colorOfBall: count == 0 || count == null
+                            ? Colors.white
+                            : Colors.black,
                       ),
-                    ),
-                    subtitle: Text(
-                      myMessage?.message == null
-                          ? ''
-                          : myMessage?.isPhoto == true
-                              ? 'Sent photo'
-                              : myMessage!.message,
-                      // messagesProvider.lastMessage != null
-                      //     ? messagesProvider.lastMessage!.message!
-                      //     : widget.messageUser.bio!,
-                      // overflow: TextOverflow.ellipsis,
-                      // maxLines: 2,
-                      // softWrap: false,
-                      style: myGoogleFont(
-                          count != 0 ? Colors.white : Colors.grey[600],
-                          11.0.sp,
-                          FontWeight.w400),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing: count == 0 || count == null
-                        ? Text('')
-                        : Container(
-                            height: 27,
-                            width: 27,
-                            decoration: BoxDecoration(
-                                color: kGreenColor,
-                                borderRadius: BorderRadius.circular(27)),
-                            child: Center(
-                              child: Text(
-                                '$count',
-                                style: myGoogleFont(
-                                    Colors.black, 15, FontWeight.w600),
-                              ),
+                      SizedBox(
+                        width: 2.0.w,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            child: Text(
+                              widget.messageUser.username!,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              softWrap: false,
+                              style: myGoogleFont(
+                                  count == 0 ? Colors.black : Colors.white,
+                                  12.0.sp,
+                                  FontWeight.w500),
                             ),
                           ),
+                          Container(
+                            width: 40.0.w,
+                            child: Text(
+                              myMessage?.message == null
+                                  ? ''
+                                  : myMessage?.isPhoto == true
+                                      ? 'Sent photo'
+                                      : myMessage!.message,
+                              // messagesProvider.lastMessage != null
+                              //     ? messagesProvider.lastMessage!.message!
+                              //     : widget.messageUser.bio!,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              softWrap: false,
+                              style: myGoogleFont(
+                                  count != 0 ? Colors.white : Colors.grey[600],
+                                  11.0.sp,
+                                  FontWeight.w400),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      count == 0 || count == null
+                          ? Text('')
+                          : Container(
+                              height: 27,
+                              width: 27,
+                              decoration: BoxDecoration(
+                                  color: kGreenColor,
+                                  borderRadius: BorderRadius.circular(27)),
+                              child: Center(
+                                child: Text(
+                                  '$count',
+                                  style: myGoogleFont(
+                                      Colors.black, 15, FontWeight.w600),
+                                ),
+                              ),
+                            ),
+                    ],
                   ),
                 )
+                    //  ListTile(
+                    //   leading: PhotoWithState(
+                    //     state: widget.messageUser.state,
+                    //     photoUrl: widget.messageUser.photo,
+                    //     radius: 8.5.h,
+                    //     radiusOfBall: 5.3.sp,
+                    //     colorOfBall: count == 0 || count == null
+                    //         ? Colors.white
+                    //         : Colors.green,
+                    //   ),
+
+                    //   //  CircleAvatar(
+                    //   //   backgroundImage: CachedNetworkImageProvider(widget.messageUser.photo),
+                    //   //   radius: 30,
+                    //   title: Container(
+                    //     margin: EdgeInsets.only(top: 1.5.h),
+                    //     child: Text(
+                    //       widget.messageUser.username!,
+                    //       style: myGoogleFont(
+                    //           count == 0 ? Colors.black : Colors.white,
+                    //           12.0.sp,
+                    //           FontWeight.w500),
+                    //     ),
+                    //   ),
+                    //   subtitle: Text(
+                    //     myMessage?.message == null
+                    //         ? ''
+                    //         : myMessage?.isPhoto == true
+                    //             ? 'Sent photo'
+                    //             : myMessage!.message,
+                    //     // messagesProvider.lastMessage != null
+                    //     //     ? messagesProvider.lastMessage!.message!
+                    //     //     : widget.messageUser.bio!,
+                    //     // overflow: TextOverflow.ellipsis,
+                    //     // maxLines: 2,
+                    //     // softWrap: false,
+                    //     style: myGoogleFont(
+                    //         count != 0 ? Colors.white : Colors.grey[600],
+                    //         11.0.sp,
+                    //         FontWeight.w400),
+                    //     overflow: TextOverflow.ellipsis,
+                    //   ),
+                    //   trailing: count == 0 || count == null
+                    //       ? Text('')
+                    //       : Container(
+                    //           height: 27,
+                    //           width: 27,
+                    //           decoration: BoxDecoration(
+                    //               color: kGreenColor,
+                    //               borderRadius: BorderRadius.circular(27)),
+                    //           child: Center(
+                    //             child: Text(
+                    //               '$count',
+                    //               style: myGoogleFont(
+                    //                   Colors.black, 15, FontWeight.w600),
+                    //             ),
+                    //           ),
+                    //         ),
+                    // ),
+                    )
                 //   Text(
                 //     '$count',
                 //     style: myGoogleFont(Colors.grey[400], 16, FontWeight.w400)

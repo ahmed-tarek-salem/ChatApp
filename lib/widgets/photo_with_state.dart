@@ -33,24 +33,28 @@ class _PhotoWithStateState extends State<PhotoWithState> {
         //   child:
         //       CachedNetworkImage(imageUrl: widget.photoUrl!, fit: BoxFit.cover),
         // ),
-        // Container(
-        //   width: 8.0.h,
-        //   height: 8.0.h,
-        //   decoration: BoxDecoration(
-        //     shape: BoxShape.circle,
-        //     image: DecorationImage(
-        //       fit: BoxFit.cover,
-        //       image: CachedNetworkImageProvider(
-        //         widget.photoUrl!,
-        //       ),
-        //     ),
-        //   ),
-        // ),
+//         Container(
+//           width: 8.5.h,
+//           height: 8.5.h,
+
+//           decoration: BoxDecoration(
+//             shape: BoxShape.circle,
+//             image: DecorationImage(
+//               fit: BoxFit.cover,
+//               image: CachedNetworkImageProvider(
+//                 widget.photoUrl!,
+//                 maxHeight: 80,
+//                 maxWidth: 80,
+// ),
+
+//             ),
+//           ),
+//         ),
         ClipRRect(
-          borderRadius: BorderRadius.circular(8.5.h),
+          borderRadius: BorderRadius.circular(50.5.h),
           child: CachedNetworkImage(
-            height: 8.5.h,
-            width: 8.5.h,
+            height: widget.radius,
+            width: widget.radius,
             fit: BoxFit.cover,
             imageUrl: widget.photoUrl!,
             placeholder: (context, url) => CircularProgressIndicator(),
@@ -66,16 +70,17 @@ class _PhotoWithStateState extends State<PhotoWithState> {
         //   ),
         // ),
         Positioned(
-            right: -3,
-            bottom: 0,
+          right: -3,
+          bottom: 0,
+          child: CircleAvatar(
+            backgroundColor: widget.colorOfBall,
+            radius: widget.radiusOfBall! + 3.5,
             child: CircleAvatar(
-              backgroundColor: widget.colorOfBall,
-              radius: widget.radiusOfBall! + 3,
-              child: CircleAvatar(
-                  radius: widget.radiusOfBall,
-                  backgroundColor:
-                      widget.state == true ? kGreenColor : Colors.grey[300]),
-            ))
+                radius: widget.radiusOfBall,
+                backgroundColor:
+                    widget.state == true ? kGreenColor : Colors.grey[300]),
+          ),
+        )
       ],
     );
   }

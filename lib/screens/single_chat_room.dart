@@ -111,15 +111,11 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
   }
 
   submitMessage() async {
-    await databaseMethods.sendMessage(
-        widget.messageUser.username!,
-        myCurrentUser!.username!,
-        messageController.text,
-        myCurrentUser!.uid,
-        false,
-        counter!);
-
+    String message = messageController.text;
     messageController.clear();
+    await databaseMethods.sendMessage(widget.messageUser.username!,
+        myCurrentUser!.username!, message, myCurrentUser!.uid, false, counter!);
+
     counterHandle();
   }
 
@@ -179,6 +175,7 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
                 child: PhotoWithState(
                     state: widget.messageUser.state,
                     photoUrl: widget.messageUser.photo,
+                    radius: 8.5.h,
                     radiusOfBall: 7,
                     colorOfBall: Colors.white),
               ),

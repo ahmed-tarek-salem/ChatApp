@@ -62,11 +62,8 @@ class _UploadState extends State<Upload> {
     setState(() {
       isUploading = true;
     });
-    //await compressImage();
-    print('Oneeeeeeeeeeeeeeeeeeeeeeeeeeeee');
     String photoUrl =
         await databaseMethods.uploadImageToStorge(widget.file, postId);
-    print('Is Goinnnnnnnnnnnnnnnnnnnnng');
     databaseMethods.createPostInFirestore(
         currentUserId: userUploadingPost!.uid,
         currentUsername: userUploadingPost!.username,
@@ -78,7 +75,6 @@ class _UploadState extends State<Upload> {
     captionController.clear();
     locationController.clear();
     setState(() {
-      //widget.file=null;
       isUploading = false;
       postId = Uuid().v4();
     });
@@ -86,19 +82,20 @@ class _UploadState extends State<Upload> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: ListView(
-          children: [
-            isUploading ? linearProgress() : Text(""),
-            Container(
-              height: 300.0,
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: Center(
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: ListView(
+            children: [
+              isUploading ? linearProgress() : Text(""),
+              Container(
+                height: 250.0,
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: Center(
                   child: Container(
+                    // aspectRatio: 16 / 9,
+
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         fit: BoxFit.cover,
@@ -108,73 +105,73 @@ class _UploadState extends State<Upload> {
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 15),
-            ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(userUploadingPost!.photo!),
-                radius: 35,
-              ),
-              title: TextField(
-                controller: captionController,
-                decoration: InputDecoration(
-                    hintText: 'Write a caption', border: InputBorder.none),
-              ),
-            ),
-            SizedBox(height: 10),
-            Divider(),
-            SizedBox(height: 10),
-            ListTile(
-              leading: Padding(
-                padding: const EdgeInsets.only(left: 15.0),
-                child: Icon(
-                  Icons.pin_drop,
-                  color: Colors.orange,
-                  size: 45.0,
+              SizedBox(height: 15),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(userUploadingPost!.photo!),
+                  radius: 35,
+                ),
+                title: TextField(
+                  controller: captionController,
+                  decoration: InputDecoration(
+                      hintText: 'Write a caption', border: InputBorder.none),
                 ),
               ),
-              title: Container(
-                width: 250.0,
-                child: TextField(
-                  controller: locationController,
-                  decoration: InputDecoration(
-                    hintText: "Where was this photo taken?",
-                    border: InputBorder.none,
+              SizedBox(height: 10),
+              Divider(),
+              SizedBox(height: 10),
+              ListTile(
+                leading: Padding(
+                  padding: const EdgeInsets.only(left: 15.0),
+                  child: Icon(
+                    Icons.pin_drop,
+                    color: Colors.orange,
+                    size: 45.0,
+                  ),
+                ),
+                title: Container(
+                  width: 250.0,
+                  child: TextField(
+                    controller: locationController,
+                    decoration: InputDecoration(
+                      hintText: "Where was this photo taken?",
+                      border: InputBorder.none,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Container(
-              width: 200.0,
-              height: 100.0,
-              alignment: Alignment.center,
-              child: RaisedButton.icon(
-                label: Text(
-                  "Use Current Location",
-                  style: TextStyle(color: Colors.white),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                color: Colors.grey[500],
-                onPressed: () {
-                  getUserLocation();
-                },
-                icon: Icon(
-                  Icons.my_location,
-                  color: Colors.white,
+              Container(
+                width: 200.0,
+                height: 100.0,
+                alignment: Alignment.center,
+                child: RaisedButton.icon(
+                  label: Text(
+                    "Use Current Location",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  color: Colors.grey[500],
+                  onPressed: () {
+                    getUserLocation();
+                  },
+                  icon: Icon(
+                    Icons.my_location,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-            GestureDetector(
-              onTap: () async {
-                //if(isUploading)
-                await handleSubmit();
-                Navigator.pop(context);
-              },
-              child: SubmitButton('Upload Post'),
-            ),
-          ],
+              GestureDetector(
+                onTap: () async {
+                  //if(isUploading)
+                  await handleSubmit();
+                  Navigator.pop(context);
+                },
+                child: SubmitButton('Upload Post'),
+              ),
+            ],
+          ),
         ),
       ),
     );

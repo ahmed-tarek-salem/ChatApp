@@ -4,10 +4,12 @@ import 'package:ChatApp/models/user.dart';
 import 'package:ChatApp/providers/user_provider.dart';
 import 'package:ChatApp/screens/home_page.dart';
 import 'package:ChatApp/widgets/submit_button.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 class EditProfile extends StatefulWidget {
   @override
@@ -137,12 +139,7 @@ class _EditProfileState extends State<EditProfile> {
   //   }
   // }
 
-  handleSubmit() async {
-    setState(
-      () {
-        isLoading = true;
-      },
-    );
+  updateProfile() async {
     String photoUrl = file != null
         ? await databaseMethods.uploadImageToStorge(file, myUser!.uid!)
         : '';
@@ -150,7 +147,7 @@ class _EditProfileState extends State<EditProfile> {
         bio: bioController.text,
         photo: file == null ? myUser!.photo! : photoUrl,
         username: usernameController.text);
-
+    print('Its the ${updatedUser.photo}');
     // User? updatedUser = User(
     //     bio: bioController.text,
     //     photo: myUser!.photo!,
@@ -167,13 +164,20 @@ class _EditProfileState extends State<EditProfile> {
   //   });
   // }
 
-  updateProfile() async {
+  handleSubmit() async {
     if (formKey.currentState!.validate()) {
-      await handleSubmit();
+      setState(() {
+        isLoading = true;
+      });
+      await updateProfile();
+      setState(() {
+        isLoading = false;
+      });
       // showPhotoIcon();
       SnackBar snackBar = SnackBar(
         content: Text('Profile Updated'),
       );
+
       scaffoldkey.currentState!.showSnackBar(snackBar);
       //databaseMethods.addToNewsFeed(widget.uid);
     }
@@ -186,152 +190,167 @@ class _EditProfileState extends State<EditProfile> {
     loadData();
   }
 
-  // @override
-  // void dispose() {
-  //    loadImage();
-  //   super.dispose();
-  // }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldkey,
-      body:
-          //  url == null || isLoading == true
-          //     ? Center(
-          //         child: CircularProgressIndicator(),
-          //       )
-          //     :
-          SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 25),
-            Center(
-              child: Stack(
-                children: [
-                  CircleAvatar(
-                      radius: 130,
-                      backgroundImage: (file == null
-                          ? NetworkImage(myUser!.photo!)
-                          // ? NetworkImage(url,
-                          //     cacheWidth: 40, cacheHeight: 40)
-                          : FileImage(file!)) as ImageProvider<Object>?),
-                  Positioned(
-                    bottom: 10,
-                    right: 20,
-                    child: GestureDetector(
-                      child: CircleAvatar(
-                        radius: 26,
-                        backgroundColor: kGreenColor,
-                        child: Icon(
-                          Icons.add_a_photo,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                      ),
-                      onTap: () {
-                        selectImage(context);
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 35.0),
-              child: Form(
-                key: formKey,
+    return SafeArea(
+      child: Scaffold(
+        key: scaffoldkey,
+        body: isLoading == true
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Username',
-                      style:
-                          myGoogleFont(Colors.grey[500], 16, FontWeight.w500),
+                    SizedBox(height: 4.0.h),
+                    Center(
+                      child: Stack(
+                        children: [
+                          // file == null
+                          //       ? NetworkImage(
+                          //           myUser!.photo!,
+                          //         )
+                          //       : FileImage(file!)) as ImageProvider<Object>?,
+                          file == null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(50.5.h),
+                                  child: CachedNetworkImage(
+                                    height: 45.0.h,
+                                    width: 45.0.h,
+                                    fit: BoxFit.cover,
+                                    imageUrl: myUser!.photo!,
+                                    placeholder: (context, url) => Center(
+                                        child: CircularProgressIndicator()),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
+                                  ))
+                              : CircleAvatar(
+                                  radius: 100.0.sp,
+                                  backgroundImage: (FileImage(file!)),
+                                ),
+                          // CircleAvatar(
+                          //   radius: 100.0.sp,
+                          //   backgroundImage: (file == null
+                          //       ? NetworkImage(
+                          //           myUser!.photo!,
+                          //         )
+                          //       : FileImage(file!)) as ImageProvider<Object>?,
+                          // ),
+                          Positioned(
+                            bottom: 1.5.h,
+                            right: 5.0.w,
+                            child: GestureDetector(
+                              child: CircleAvatar(
+                                radius: 20.0.sp,
+                                backgroundColor: kGreenColor,
+                                child: Icon(
+                                  Icons.add_a_photo,
+                                  color: Colors.white,
+                                  size: 23.0.sp,
+                                ),
+                              ),
+                              onTap: () {
+                                selectImage(context);
+                              },
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.person,
-                          size: 30,
-                          color: kGreenColor,
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4.8.w),
+                      child: Form(
+                        key: formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Username',
+                              style: myGoogleFont(
+                                  Colors.grey[500], 12.5.sp, FontWeight.w500),
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.person,
+                                  size: 23.0.sp,
+                                  color: kGreenColor,
+                                ),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Expanded(
+                                  child: TextFormField(
+                                    style: myGoogleFont(
+                                        Colors.black, 12.0.sp, FontWeight.w600),
+                                    validator: (val) {
+                                      if (val!.trim().length <= 3)
+                                        return 'Username is too short';
+                                      else
+                                        return null;
+                                    },
+                                    controller: usernameController,
+                                    decoration: InputDecoration(
+                                        hintText: 'Update username'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              'Bio',
+                              style: myGoogleFont(
+                                  Colors.grey[500], 12.5.sp, FontWeight.w500),
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.info_outline,
+                                  size: 23.0.sp,
+                                  color: kGreenColor,
+                                ),
+                                SizedBox(
+                                  width: 15.0.sp,
+                                ),
+                                Expanded(
+                                  child: TextFormField(
+                                    style: myGoogleFont(
+                                        Colors.black, 12.5.sp, FontWeight.w600),
+                                    validator: (val) {
+                                      if (val!.trim().length > 100)
+                                        return 'Bio is too long';
+                                      else
+                                        return null;
+                                    },
+                                    controller: bioController,
+                                    decoration:
+                                        InputDecoration(hintText: 'Update bio'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                await handleSubmit();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 50.0, vertical: 20),
+                                child: SubmitButton('Update profile'),
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            style:
-                                myGoogleFont(Colors.black, 16, FontWeight.w600),
-                            validator: (val) {
-                              if (val!.trim().length <= 3)
-                                return 'Username is too short';
-                              else
-                                return null;
-                            },
-                            controller: usernameController,
-                            decoration:
-                                InputDecoration(hintText: 'Update username'),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      'Bio',
-                      style:
-                          myGoogleFont(Colors.grey[500], 16, FontWeight.w500),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.info_outline,
-                          size: 30,
-                          color: kGreenColor,
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            style:
-                                myGoogleFont(Colors.black, 16, FontWeight.w600),
-                            validator: (val) {
-                              if (val!.trim().length > 100)
-                                return 'Bio is too long';
-                              else
-                                return null;
-                            },
-                            controller: bioController,
-                            decoration: InputDecoration(hintText: 'Update bio'),
-                          ),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        await updateProfile();
-                        // Navigator.push(context,
-                        //     MaterialPageRoute(builder: (context) {
-                        //   return HomePage();
-                        // }));
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 50.0, vertical: 20),
-                        child: SubmitButton('Update profile'),
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
