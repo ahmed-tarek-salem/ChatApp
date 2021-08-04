@@ -2,6 +2,10 @@
 
 Social media application using flutter firebase services as back-end.
 
+# Download link
+
+https://docs.google.com/uc?export=download&id=1BRKtWY7yJlOh5E8Fq1X3i4-0HwNa_CMx
+
 # Screenshots
 <p align="center">
   <img src='Screenshots/sc1.jpg' width="400" /> 
