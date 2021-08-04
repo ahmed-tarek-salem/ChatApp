@@ -4,6 +4,7 @@ import 'package:ChatApp/models/user.dart';
 import 'package:ChatApp/providers/user_provider.dart';
 import 'package:ChatApp/screens/home_page.dart';
 import 'package:ChatApp/screens/image.dart';
+import 'package:ChatApp/screens/user_profile.dart';
 import 'package:ChatApp/widgets/photo_with_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,16 +23,16 @@ class PostTile extends StatefulWidget {
 }
 
 class _PostTileState extends State<PostTile> {
-  User? myUser;
+  User? postUser;
   void setStateIfMounted(f) {
     if (mounted) setState(f);
   }
 
   getUser() async {
     DocumentSnapshot doc = await refUsers.doc(widget.myPost.ownerId).get();
-    User myUserTest = User.fromDocument(doc);
+    User postUserTest = User.fromDocument(doc);
     setStateIfMounted(() {
-      myUser = myUserTest;
+      postUser = postUserTest;
     });
   }
 
@@ -93,7 +94,7 @@ class _PostTileState extends State<PostTile> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        myUser == null
+        postUser == null
             ? Center(
                 child: CircularProgressIndicator(),
               )
@@ -102,22 +103,46 @@ class _PostTileState extends State<PostTile> {
                 children: [
                   Row(
                     children: [
-                      PhotoWithState(
-                        photoUrl: myUser!.photo,
-                        colorOfBall: Colors.white,
-                        radius: 40.0.sp,
-                        radiusOfBall: 5.3.sp,
-                        state: true,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return UserProfile(postUser!);
+                              },
+                            ),
+                          );
+                        },
+                        child: PhotoWithState(
+                          photoUrl: postUser!.photo,
+                          colorOfBall: Colors.white,
+                          radius: 40.0.sp,
+                          radiusOfBall: 5.3.sp,
+                          state: true,
+                        ),
                       ),
                       SizedBox(width: 5.0.w),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            myUser!.username!,
-                            style: myGoogleFont(
-                                Colors.black, 15.0.sp, FontWeight.w500),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return UserProfile(postUser!);
+                                  },
+                                ),
+                              );
+                            },
+                            child: Text(
+                              postUser!.username!,
+                              style: myGoogleFont(
+                                  Colors.black, 15.0.sp, FontWeight.w500),
+                            ),
                           ),
                           Text(
                             timeago.format(

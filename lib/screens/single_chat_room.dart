@@ -165,35 +165,43 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
     return Scaffold(
       body: Column(
         children: [
-          Container(
-            // height: 120,
-            padding: EdgeInsets.only(
-                right: 3.75.w, left: 5.0.w, top: 6.0.h, bottom: 2.5.h),
-            child: ListTile(
-              leading: Hero(
-                tag: 'ProfilePhoto',
-                child: PhotoWithState(
-                    state: widget.messageUser.state,
-                    photoUrl: widget.messageUser.photo,
-                    radius: 8.5.h,
-                    radiusOfBall: 7,
-                    colorOfBall: Colors.white),
-              ),
-              title: Text(
-                widget.messageUser.username!,
-                style: myGoogleFont(Colors.black, 14.0.sp, FontWeight.w500),
-              ),
-              trailing: GestureDetector(
-                child: Icon(
-                  Icons.more_horiz,
-                  color: kGreenColor,
-                  size: 23.0.sp,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return UserProfile(widget.messageUser);
+              }));
+            },
+            child: Container(
+              // height: 120,
+              padding: EdgeInsets.only(
+                  right: 3.75.w, left: 5.0.w, top: 6.0.h, bottom: 2.5.h),
+              child: ListTile(
+                leading: Hero(
+                  tag: 'ProfilePhoto',
+                  child: PhotoWithState(
+                      state: widget.messageUser.state,
+                      photoUrl: widget.messageUser.photo,
+                      radius: 8.5.h,
+                      radiusOfBall: 7,
+                      colorOfBall: Colors.white),
                 ),
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return UserProfile(widget.messageUser);
-                  }));
-                },
+                title: Text(
+                  widget.messageUser.username!,
+                  style: myGoogleFont(Colors.black, 14.0.sp, FontWeight.w500),
+                ),
+                trailing: GestureDetector(
+                  child: Icon(
+                    Icons.more_horiz,
+                    color: kGreenColor,
+                    size: 23.0.sp,
+                  ),
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return UserProfile(widget.messageUser);
+                    }));
+                  },
+                ),
               ),
             ),
           ),

@@ -36,14 +36,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       setState(() {
         isLoading = true;
       });
-      String? uid = await (authMethods.signUp(email.text, password.text)
-          as Future<String?>);
+      String? uid = await authMethods.signUp(email.text, password.text);
       if (uid != null) {
         Map<String, dynamic> myMap = {
           'email': email.text,
           'username': userName.text,
           'photo':
-              'https://www.xovi.com/wp-content/plugins/all-in-one-seo-pack/images/default-user-image.png',
+              'https://firebasestorage.googleapis.com/v0/b/chatappfromscratch.appspot.com/o/user.png?alt=media&token=40743cd8-786f-48cf-bf15-193707d4b1f8',
           'bio': 'Available',
           'uid': uid,
           'state': true
@@ -97,107 +96,108 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: CircularProgressIndicator(),
                 ),
               )
-            : Column(
-                children: [
-                  Stack(
-                    children: [
-                      Container(
-                        height: 74.0.h,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(30.0.sp),
-                            bottomRight: Radius.circular(30.0.sp),
-                          ),
-                          child: Image(
-                            image: AssetImage('images/photo5.png'),
-                            // height: 74.0.h,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 74.0.h,
-                        decoration: BoxDecoration(
-                          color: Colors.black38,
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(30.0.sp),
-                            bottomRight: Radius.circular(30.0.sp),
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              top: 12.2.h, right: 12.5.w, left: 12.5.w),
-                          child: Form(
-                            key: formkey,
-                            child: Column(
-                              children: [
-                                Text('Sign up',
-                                    style: myGoogleFont(Colors.white, 19.0.sp,
-                                        FontWeight.w400)),
-                                SizedBox(
-                                  height: 6.7.h,
-                                ),
-                                MyTextField(
-                                  'Email',
-                                  Colors.white,
-                                  false,
-                                  email,
-                                  (email) {
-                                    bool emailValid = RegExp(
-                                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                        .hasMatch(email);
-                                    if (!emailValid)
-                                      return 'Please enter a valid email';
-                                  },
-                                ),
-                                SizedBox(
-                                  height: 3.0.h,
-                                ),
-                                MyTextField(
-                                  'Username',
-                                  Colors.white,
-                                  false,
-                                  userName,
-                                  (username) {
-                                    return username.length < 2
-                                        ? 'Enter a +2 charachter password'
-                                        : null;
-                                  },
-                                ),
-                                SizedBox(
-                                  height: 3.0.h,
-                                ),
-                                MyTextField(
-                                    'Password', Colors.white, true, password,
-                                    (password) {
-                                  return password.length < 6
-                                      ? 'Enter a +6 charachter password'
-                                      : null;
-                                }),
-                                SizedBox(
-                                  height: 4.4.h,
-                                ),
-                                GestureDetector(
-                                    onTap: () {
-                                      signUp(context);
-                                    },
-                                    child: SubmitButton('Sign up'))
-                              ],
+            : SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Stack(
+                      children: [
+                        Container(
+                          height: 74.0.h,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(30.0.sp),
+                              bottomRight: Radius.circular(30.0.sp),
+                            ),
+                            child: Image(
+                              image: AssetImage('images/photo5.png'),
+                              // height: 74.0.h,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                      )
-                    ],
-                  ),
-                  // SizedBox(
-                  //   height: 75,
-                  // ),
-                  Expanded(
-                    child: Container(
+                        Container(
+                          height: 74.0.h,
+                          decoration: BoxDecoration(
+                            color: Colors.black38,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(30.0.sp),
+                              bottomRight: Radius.circular(30.0.sp),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 12.2.h, right: 12.5.w, left: 12.5.w),
+                            child: Form(
+                              key: formkey,
+                              child: Column(
+                                children: [
+                                  Text('Sign up',
+                                      style: myGoogleFont(Colors.white, 19.0.sp,
+                                          FontWeight.w400)),
+                                  SizedBox(
+                                    height: 6.7.h,
+                                  ),
+                                  MyTextField(
+                                    'Email',
+                                    Colors.white,
+                                    false,
+                                    email,
+                                    (email) {
+                                      bool emailValid = RegExp(
+                                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                          .hasMatch(email);
+                                      if (!emailValid)
+                                        return 'Please enter a valid email';
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 3.0.h,
+                                  ),
+                                  MyTextField(
+                                    'Username',
+                                    Colors.white,
+                                    false,
+                                    userName,
+                                    (username) {
+                                      return username.length < 2
+                                          ? 'Enter a +2 charachter password'
+                                          : null;
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 3.0.h,
+                                  ),
+                                  MyTextField(
+                                      'Password', Colors.white, true, password,
+                                      (password) {
+                                    return password.length < 6
+                                        ? 'Enter a +6 charachter password'
+                                        : null;
+                                  }),
+                                  SizedBox(
+                                    height: 4.4.h,
+                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        signUp(context);
+                                      },
+                                      child: SubmitButton('Sign up'))
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    // SizedBox(
+                    //   height: 75,
+                    // ),
+                    Container(
+                      padding: EdgeInsets.only(top: 10.0.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -222,9 +222,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           )
                         ],
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
       ),
     );

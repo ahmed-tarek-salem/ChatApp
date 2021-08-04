@@ -14,7 +14,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(
     DevicePreview(
-      enabled: true,
+      enabled: false,
       builder: (context) => MyApp(), // Wrap your app
     ),
   );
