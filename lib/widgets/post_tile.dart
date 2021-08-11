@@ -119,7 +119,7 @@ class _PostTileState extends State<PostTile> {
                           colorOfBall: Colors.white,
                           radius: 40.0.sp,
                           radiusOfBall: 5.3.sp,
-                          state: true,
+                          state: postUser!.state,
                         ),
                       ),
                       SizedBox(width: 5.0.w),

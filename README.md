@@ -4,6 +4,7 @@ Social media application using flutter firebase services as back-end.
 
 # Screenshots
 <p align="center">
+  <img src='Screenshots/Demo.png' width="800" /> 
   <img src='Screenshots/sc1.jpg' width="450" /> 
   <img src='Screenshots/sc2.jpg' width="450" /> 
   <img src='Screenshots/sc3.jpg' width="450" /> 
