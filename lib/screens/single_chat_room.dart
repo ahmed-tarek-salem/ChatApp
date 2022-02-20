@@ -167,9 +167,17 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return UserProfile(widget.messageUser);
-              }));
+              const duration = Duration(milliseconds: 500);
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, sec) {
+                    return UserProfile(widget.messageUser);
+                  },
+                  transitionDuration: duration,
+                  reverseTransitionDuration: duration,
+                ),
+              );
             },
             child: Container(
               // height: 120,
