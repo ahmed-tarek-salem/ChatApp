@@ -44,6 +44,12 @@ https://drive.google.com/file/d/1yvGnjbWtCEMxJOAek1rtfPFL8ZQim-4-/view?usp=shari
 - Exploring posts and searching for some keywords.
 - Provider as statemanagement
 
+# Why used Cloud Firestore rather than Real-time database?
+
+This is a one-to-one application, there are no chat groups or something like that. Let's assume we have two friends each one sends 10 messages to the other, we will have 20 messages and the users will read the 20 documents so we will have 40 reads. It is good. 
+
+But if we have a chat group that contains 10 friends. and only two friends send each other 10 messages; we will have 20 documents. but 200 reads. because every friend will read these 20 documents. So in this case (which is not included in our application), we might need to use a real-time database. 
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
