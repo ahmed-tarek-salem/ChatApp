@@ -1,34 +1,33 @@
 {
   "project_info": {
-    "project_number": "1063685021298",
-    "firebase_url": "https://chatappfromscratch.firebaseio.com",
-    "project_id": "chatappfromscratch",
-    "storage_bucket": "chatappfromscratch.appspot.com"
+    "project_number": "18718766269",
+    "project_id": "chatty-670c5",
+    "storage_bucket": "chatty-670c5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1063685021298:android:df2e65a6c7e6c6d30caceb",
+        "mobilesdk_app_id": "1:18718766269:android:0a8b4e7da30c005a8cb3d4",
         "android_client_info": {
-          "package_name": "com.ahmedtsalem.ChatApp"
+          "package_name": "com.ahmedtsalem.chatty"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1063685021298-p8nn4f6q1ipfau01364bk6tpvbu2ud1c.apps.googleusercontent.com",
+          "client_id": "18718766269-rfr6t3g6skdeavtjaiidlablnqkeo7ho.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCmk5gvSbfL97WJirZXk0ZUtoHHjw4a4mo"
+          "current_key": "AIzaSyCo1cIxRecuD2WP_hmxk_4ecNyQma5i_Ew"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1063685021298-p8nn4f6q1ipfau01364bk6tpvbu2ud1c.apps.googleusercontent.com",
+              "client_id": "18718766269-rfr6t3g6skdeavtjaiidlablnqkeo7ho.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
