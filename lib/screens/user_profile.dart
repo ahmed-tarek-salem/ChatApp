@@ -1,25 +1,65 @@
 import 'package:ChatApp/constants.dart';
 import 'package:ChatApp/models/user.dart';
+import 'package:ChatApp/providers/user_provider.dart';
+import 'package:ChatApp/screens/home_page.dart';
 import 'package:ChatApp/screens/single_chat_room.dart';
+import 'package:ChatApp/services/followers.dart';
+import 'package:ChatApp/widgets/custom_progress_indicator.dart';
 import 'package:ChatApp/widgets/submit_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class UserProfile extends StatefulWidget {
-  final User myUser;
-  UserProfile(this.myUser);
+  final User _user;
+  UserProfile(this._user);
   @override
   _UserProfileState createState() => _UserProfileState();
 }
 
 class _UserProfileState extends State<UserProfile> {
-  User? myUser;
+  Followers _followers = Followers();
+  bool isLoading = false;
+  String? currentUserId;
+  bool? isFollowed;
+  @override
+  void initState() {
+    super.initState();
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  // }
+    currentUserId =
+        Provider.of<UserProvider>(context, listen: false).myUser!.uid;
+    getFollowingState();
+  }
+
+  getFollowingState() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    isFollowed =
+        await _followers.getStateFollowing(currentUserId!, widget._user.uid!);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  handleFolowingButtonSubmit() async {
+    bool completed = false;
+    if (isFollowed == false) {
+      completed =
+          await _followers.followFriend(currentUserId!, widget._user.uid!);
+    } else {
+      completed =
+          await _followers.unfollowFriend(currentUserId!, widget._user.uid!);
+    }
+    if (completed == true) {
+      print('Opposite');
+      setState(() {
+        isFollowed = isFollowed == true ? false : true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +72,11 @@ class _UserProfileState extends State<UserProfile> {
             Hero(
               tag: 'ProfilePhoto',
               child: CachedNetworkImage(
-                height: 70.0.h,
+                height: 55.0.h,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                imageUrl: widget.myUser.photo!,
-                placeholder: (context, url) =>
-                    Center(child: CircularProgressIndicator()),
+                imageUrl: widget._user.photo!,
+                placeholder: (context, url) => CustomProgressIndicator(),
                 errorWidget: (context, url, error) => Icon(Icons.error),
               ),
             ),
@@ -58,7 +97,7 @@ class _UserProfileState extends State<UserProfile> {
                 backgroundColor: Colors.white,
                 child: CircleAvatar(
                   radius: 20.0.sp,
-                  backgroundColor: widget.myUser.state == true
+                  backgroundColor: widget._user.state == true
                       ? kGreenColor
                       : Colors.grey[300],
                 ),
@@ -71,11 +110,11 @@ class _UserProfileState extends State<UserProfile> {
               child: Column(
             children: [
               Text(
-                widget.myUser.username!,
+                widget._user.username!,
                 style: myGoogleFont(Colors.black, 23.0.sp, FontWeight.w500),
               ),
               Text(
-                widget.myUser.bio!,
+                widget._user.bio!,
                 textAlign: TextAlign.center,
                 style: myGoogleFont(Colors.grey[550], 11.5.sp, FontWeight.w400),
               ),
@@ -85,18 +124,41 @@ class _UserProfileState extends State<UserProfile> {
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 15.0, horizontal: 30),
-                child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return SingleChatRoom(widget.myUser);
-                      }));
-                    },
-                    child: SubmitButton('Send Message',
-                        myColor: widget.myUser.state == true
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return SingleChatRoom(widget._user);
+                        }));
+                      },
+                      child: SubmitButton(
+                        'Send Message',
+                        myColor: widget._user.state == true
                             ? null
-                            : Colors.grey[300])),
-              )
+                            : Colors.grey[300],
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Visibility(
+                      visible: !isLoading,
+                      child: GestureDetector(
+                        onTap: handleFolowingButtonSubmit,
+                        child: isFollowed == true
+                            ? SubmitButton(
+                                'Unfollow',
+                                myColor: Colors.black,
+                              )
+                            : SubmitButton(
+                                'Follow',
+                                myColor: Colors.black,
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           )),
         )

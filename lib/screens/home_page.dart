@@ -6,6 +6,7 @@ import 'package:ChatApp/screens/newsfeed.dart';
 import 'package:ChatApp/screens/edit_profile.dart';
 import 'package:ChatApp/services/database.dart';
 import 'package:ChatApp/services/shared_pref.dart';
+import 'package:ChatApp/widgets/custom_progress_indicator.dart';
 import 'package:ChatApp/widgets/photo_with_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,9 +23,11 @@ final CollectionReference refFeeds =
     FirebaseFirestore.instance.collection('feeds');
 final CollectionReference refPosts =
     FirebaseFirestore.instance.collection('posts');
+final CollectionReference refFollowers =
+    FirebaseFirestore.instance.collection('followers');
+final CollectionReference refFollowing =
+    FirebaseFirestore.instance.collection('following');
 DatabaseMethods databaseMethods = DatabaseMethods();
-
-final timeStamp = DateTime.now().millisecondsSinceEpoch;
 
 class HomePage extends StatefulWidget {
   @override
@@ -73,7 +76,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     Widget returnPage(int index) {
       if (index == 0) {
-        return ChatRooms();
+        return ChatRooms(uid!);
       } else if (index == 1)
         return NewsFeed();
       else
@@ -82,9 +85,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       body: isLoading == true
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
+          ? CustomProgressIndicator()
           : returnPage(currentIndex),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
@@ -111,9 +112,7 @@ class _HomePageState extends State<HomePage> {
                   // Icon(Icons.message),
                   photoUrl == null
                       ? Container(
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
+                          child: CustomProgressIndicator(),
                         )
                       : PhotoWithState(
                           colorOfBall: Colors.white,

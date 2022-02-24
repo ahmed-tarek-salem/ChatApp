@@ -8,9 +8,9 @@ class MessagesProvider extends ChangeNotifier {
   late Map<String, Message> lastMessages;
   int? numberOfUnseenMessages = 0;
 
-  getNumberOfUnseenMessages(User messageUser, User currentUser) async {
-    int? testCount = await databaseMethods.getCount(
-        currentUser.username!, messageUser.username!);
+  getNumberOfUnseenMessages(User friendUser, User currentUser) async {
+    int? testCount =
+        await databaseMethods.getCount(currentUser.email!, friendUser.email!);
     numberOfUnseenMessages = testCount;
     notifyListeners();
   }

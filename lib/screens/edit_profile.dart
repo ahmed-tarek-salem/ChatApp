@@ -3,6 +3,7 @@ import 'package:ChatApp/constants.dart';
 import 'package:ChatApp/models/user.dart';
 import 'package:ChatApp/providers/user_provider.dart';
 import 'package:ChatApp/screens/home_page.dart';
+import 'package:ChatApp/widgets/custom_progress_indicator.dart';
 import 'package:ChatApp/widgets/submit_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -196,9 +197,7 @@ class _EditProfileState extends State<EditProfile> {
       child: Scaffold(
         key: scaffoldkey,
         body: isLoading == true
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
+            ? CustomProgressIndicator()
             : SingleChildScrollView(
                 child: Column(
                   children: [
@@ -219,8 +218,8 @@ class _EditProfileState extends State<EditProfile> {
                                     width: 45.0.h,
                                     fit: BoxFit.cover,
                                     imageUrl: myUser!.photo!,
-                                    placeholder: (context, url) => Center(
-                                        child: CircularProgressIndicator()),
+                                    placeholder: (context, url) =>
+                                        CustomProgressIndicator(),
                                     errorWidget: (context, url, error) =>
                                         Icon(Icons.error),
                                   ))

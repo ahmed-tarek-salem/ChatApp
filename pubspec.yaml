@@ -47,7 +47,8 @@ dependencies:
   provider: ^5.0.0
   cached_network_image: ^3.1.0
   device_preview: ^0.7.4
-
+  flutter_spinkit: ^5.1.0
+  flutter_typeahead: ^3.2.4
 
 
 

@@ -12,7 +12,7 @@ class SubmitButton extends StatelessWidget {
       height: 7.5.h,
       width: double.infinity,
       decoration: BoxDecoration(
-          color: myColor == null ? kGreenColor : Colors.grey[400],
+          color: myColor == null ? kGreenColor : myColor,
           borderRadius: BorderRadius.circular(5)),
       child: Center(
         child: Text(

@@ -17,6 +17,10 @@ class DatabaseMethods {
       FirebaseFirestore.instance.collection('feeds');
   final CollectionReference refPosts =
       FirebaseFirestore.instance.collection('posts');
+  final CollectionReference refFollowers =
+      FirebaseFirestore.instance.collection('followers');
+  final CollectionReference refFollowing =
+      FirebaseFirestore.instance.collection('following');
 
   setUserInfo(var userMap, var uid) {
     return FirebaseFirestore.instance.collection('users').doc(uid).set(userMap);
@@ -89,9 +93,9 @@ class DatabaseMethods {
     return doc['username'];
   }
 
-  sendMessage(String userMessageName, String myCurrentUserName, String message,
+  sendMessage(String friendEmail, String currentUserEmail, String message,
       String? myCurrentUserUid, bool isPhoto, int counter) async {
-    String fullname = returnNameOfChat(userMessageName, myCurrentUserName);
+    String fullname = returnNameOfChat(friendEmail, currentUserEmail);
     await refChats.doc(fullname).collection('chatmessages').add({
       'message': message,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -99,7 +103,7 @@ class DatabaseMethods {
       'isphoto': isPhoto,
     });
     //send message to counter unseen messages
-    await increaseCount(counter, userMessageName, myCurrentUserName);
+    await increaseCount(counter, friendEmail, currentUserEmail);
 
     //send message to last messages collection
     await refChats
@@ -115,8 +119,8 @@ class DatabaseMethods {
   }
 
   returnNameOfChat(String name1, String name2) {
-    int numberr = [name1.length, name2.length].reduce(min);
-    for (int i = 0; i < numberr; i++) {
+    int lengthOfSmallerEmail = [name1.length, name2.length].reduce(min);
+    for (int i = 0; i < lengthOfSmallerEmail; i++) {
       if (name1[i].codeUnitAt(0) < name2[i].codeUnitAt(0)) {
         return '$name1 _ $name2'.trim();
       } else if (name1[i].codeUnitAt(0) > name2[i].codeUnitAt(0)) {
@@ -141,25 +145,23 @@ class DatabaseMethods {
   //   print(mapOfChatNamesAndLastMessages);
   // }
 
-  increaseCount(
-      int count, String userMessageName, String myCurrentUserName) async {
-    String fullname = returnNameOfChat(userMessageName, myCurrentUserName);
+  increaseCount(int count, String friendEmail, String currentUserEmail) async {
+    String fullname = returnNameOfChat(friendEmail, currentUserEmail);
     await refChats
         .doc(fullname)
         .collection('unseenmessages')
-        .doc(userMessageName)
+        .doc(friendEmail)
         .set({'count': count + 1});
   }
 
-  Future<int?> getCount(
-      String userMessageName, String myCurrentUserName) async {
+  Future<int?> getCount(String friendEmail, String currentUserEmail) async {
     try {
       int? myCount;
-      String fullname = returnNameOfChat(userMessageName, myCurrentUserName);
+      String fullname = returnNameOfChat(friendEmail, currentUserEmail);
       DocumentSnapshot doc = await refChats
           .doc(fullname)
           .collection('unseenmessages')
-          .doc(userMessageName)
+          .doc(friendEmail)
           .get();
       if (doc.exists) {
         myCount = doc['count'];
@@ -173,9 +175,9 @@ class DatabaseMethods {
   }
 
   Future<Message?> getLastMessage(
-      String userMessageName, String myCurrentUserName) async {
+      String friendEmail, String currentUserEmail) async {
     try {
-      String fullname = returnNameOfChat(userMessageName, myCurrentUserName);
+      String fullname = returnNameOfChat(friendEmail, currentUserEmail);
       DocumentSnapshot doc = await refChats
           .doc(fullname)
           .collection('unseenmessages')
@@ -192,13 +194,13 @@ class DatabaseMethods {
     }
   }
 
-  clearCount(String userMessageName, String myCurrentUserName) async {
+  clearCount(String friendEmail, String currentUserEmail) async {
     try {
-      String fullname = returnNameOfChat(userMessageName, myCurrentUserName);
+      String fullname = returnNameOfChat(friendEmail, currentUserEmail);
       await refChats
           .doc(fullname)
           .collection('unseenmessages')
-          .doc(myCurrentUserName)
+          .doc(currentUserEmail)
           .set({'count': 0});
     } catch (e) {
       print(e);

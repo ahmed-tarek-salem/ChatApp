@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:ChatApp/constants.dart';
 import 'package:ChatApp/models/post.dart';
 import 'package:ChatApp/screens/upload.dart';
+import 'package:ChatApp/widgets/custom_progress_indicator.dart';
 import 'package:ChatApp/widgets/post_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,12 @@ class NewsFeed extends StatefulWidget {
 
 class _NewsFeedState extends State<NewsFeed> {
   File? file;
-  Stream<QuerySnapshot>? mySnapshot;
+  Stream<QuerySnapshot>? mySnapshot =
+      refPosts.orderBy('timestamp', descending: true).snapshots();
+  Stream<QuerySnapshot>? returnSnapshot() {
+    return refPosts.orderBy('timestamp', descending: true).snapshots();
+  }
+
   void setStateIfMounted(f) {
     if (mounted) setState(f);
   }
@@ -26,30 +32,44 @@ class _NewsFeedState extends State<NewsFeed> {
     Navigator.pop(context);
     final pickedFile = await ImagePicker()
         .getImage(source: ImageSource.gallery, imageQuality: 70);
-    if (pickedFile != null)
+    if (pickedFile != null) {
       setStateIfMounted(
         () {
           file = File(pickedFile.path);
         },
       );
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) {
-          return Upload(file);
-        },
-      ),
-    );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return Upload(file);
+          },
+        ),
+      );
+    }
+  }
+
+  Future<void> refresh() async {
+    returnSnapshot();
   }
 
   imageFromCamera(context) async {
     Navigator.pop(context);
     final pickedFile = await ImagePicker()
         .getImage(source: ImageSource.camera, imageQuality: 70);
-    if (pickedFile != null)
+    if (pickedFile != null) {
       setStateIfMounted(() {
         file = File(pickedFile.path);
       });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return Upload(file);
+          },
+        ),
+      );
+    }
   }
 
   Future<File?> selectImage(parentContext) async {
@@ -102,75 +122,73 @@ class _NewsFeedState extends State<NewsFeed> {
               ),
             ),
           ),
-          body: ListView(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 9.0.h,
-              ),
-              Center(
-                child: Text(
-                  'Explore',
-                  style: myGoogleFont(Colors.black, 26.0.sp, FontWeight.w500),
+          body: RefreshIndicator(
+            onRefresh: refresh,
+            child: ListView(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 9.0.h,
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 3.75.w),
-                child: TextField(
-                  onChanged: (value) {
-                    Stream<QuerySnapshot> snapshot = refPosts
-                        .where('description', isGreaterThanOrEqualTo: value)
-                        .snapshots();
-                    setState(() {
-                      mySnapshot = snapshot;
-                    });
+                Center(
+                  child: Text(
+                    'Explore',
+                    style: myGoogleFont(Colors.black, 26.0.sp, FontWeight.w500),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 3.75.w),
+                  child: TextField(
+                    onChanged: (value) {
+                      Stream<QuerySnapshot> snapshot = refPosts
+                          .where('description', isGreaterThanOrEqualTo: value)
+                          .snapshots();
+                      setState(() {
+                        mySnapshot = snapshot;
+                      });
+                    },
+                    decoration: InputDecoration(
+                        fillColor: Colors.grey[100],
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey[100]!, width: 1)),
+                        hintText: 'Search',
+                        hintStyle: TextStyle(
+                          color: Colors.grey[400],
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.greenAccent, width: 1)),
+                        errorBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.red, width: 1)),
+                        errorStyle:
+                            myGoogleFont(Colors.red, 12.0.sp, FontWeight.w500)),
+                  ),
+                ),
+                StreamBuilder<QuerySnapshot>(
+                  stream: mySnapshot,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return CustomProgressIndicator();
+                    } else {
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          physics: ClampingScrollPhysics(),
+                          itemCount: (snapshot.data!).docs.length,
+                          itemBuilder: (context, index) {
+                            DocumentSnapshot doc = (snapshot.data!).docs[index];
+                            Post myPost = Post.fromDocument(doc);
+                            return PostTile(myPost);
+                          });
+                    }
                   },
-                  decoration: InputDecoration(
-                      fillColor: Colors.grey[100],
-                      filled: true,
-                      enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.grey[100]!, width: 1)),
-                      hintText: 'Search',
-                      hintStyle: TextStyle(
-                        color: Colors.grey[400],
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.greenAccent, width: 1)),
-                      errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red, width: 1)),
-                      errorStyle:
-                          myGoogleFont(Colors.red, 12.0.sp, FontWeight.w500)),
-                ),
-              ),
-              StreamBuilder<QuerySnapshot>(
-                stream: mySnapshot == null
-                    ? refPosts
-                        .orderBy('timestamp', descending: true)
-                        .snapshots()
-                    : mySnapshot,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else {
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        physics: ClampingScrollPhysics(),
-                        itemCount: (snapshot.data!).docs.length,
-                        itemBuilder: (context, index) {
-                          DocumentSnapshot doc = (snapshot.data!).docs[index];
-                          Post myPost = Post.fromDocument(doc);
-                          return PostTile(myPost);
-                        });
-                  }
-                },
-              )
-            ],
+                )
+              ],
+            ),
           )),
     );
   }

@@ -4,6 +4,7 @@ import 'package:ChatApp/providers/user_provider.dart';
 import 'package:ChatApp/screens/home_page.dart';
 import 'package:ChatApp/screens/welcome_screen.dart';
 import 'package:ChatApp/services/shared_pref.dart';
+import 'package:ChatApp/widgets/custom_progress_indicator.dart';
 
 import 'package:ChatApp/widgets/user_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +13,8 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class ChatRooms extends StatefulWidget {
+  final String userId;
+  ChatRooms(this.userId);
   @override
   _ChatRoomsState createState() => _ChatRoomsState();
 }
@@ -21,6 +24,7 @@ class _ChatRoomsState extends State<ChatRooms> {
   int? chatCount = 0;
   TextEditingController searchController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String? userId;
 
   @override
   void dispose() {
@@ -29,14 +33,20 @@ class _ChatRoomsState extends State<ChatRooms> {
   }
 
   getChatsCount() async {
-    QuerySnapshot snapshot = await refUsers.get();
+    userId = Provider.of<UserProvider>(context, listen: false).myUser!.uid!;
+    QuerySnapshot snapshot =
+        await refFollowing.doc(userId).collection('userFollowing').get();
     void setStateIfMounted(f) {
       if (mounted) setState(f);
     }
 
     setStateIfMounted(() {
-      chatCount = snapshot.docs.length - 1;
+      chatCount = snapshot.docs.length;
     });
+  }
+
+  Stream<QuerySnapshot>? returnSnapshot() {
+    return refFollowing.doc(userId).collection('userFollowing').snapshots();
   }
 
   @override
@@ -160,13 +170,13 @@ class _ChatRoomsState extends State<ChatRooms> {
               padding: EdgeInsets.symmetric(horizontal: 10.0.w),
               child: TextField(
                 onChanged: (val) async {
-                  Stream<QuerySnapshot> snapshot = refUsers
-                      .where('username',
-                          isGreaterThanOrEqualTo: searchController.text)
-                      .snapshots();
-                  setState(() {
-                    mySnapshot = snapshot;
-                  });
+                  // Stream<QuerySnapshot> snapshot = refUsers
+                  //     .where('username',
+                  //         isGreaterThanOrEqualTo: searchController.text)
+                  //     .snapshots();
+                  // setState(() {
+                  //   mySnapshot = snapshot;
+                  // });
                 },
                 controller: searchController,
                 decoration: InputDecoration(
@@ -186,12 +196,10 @@ class _ChatRoomsState extends State<ChatRooms> {
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream: mySnapshot == null ? refUsers.snapshots() : mySnapshot,
+                stream: mySnapshot == null ? returnSnapshot() : mySnapshot,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData)
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return CustomProgressIndicator();
                   else {
                     chatCount = (snapshot.data!).docs.length;
                     return ListView.builder(

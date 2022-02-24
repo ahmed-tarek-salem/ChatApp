@@ -4,6 +4,7 @@ import 'package:ChatApp/screens/home_page.dart';
 import 'package:ChatApp/screens/log_in_screen.dart';
 import 'package:ChatApp/services/auth.dart';
 import 'package:ChatApp/services/shared_pref.dart';
+import 'package:ChatApp/widgets/custom_progress_indicator.dart';
 import 'package:ChatApp/widgets/submit_button.dart';
 import 'package:ChatApp/widgets/text_field.dart';
 import 'package:flutter/material.dart';
@@ -92,9 +93,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: Scaffold(
         body: isLoading == true
             ? Container(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
+                child: CustomProgressIndicator(),
               )
             : SingleChildScrollView(
                 child: Column(

@@ -29,7 +29,7 @@ class _MessageTileState extends State<UserTile> {
   int? count;
   getCountofUnseenMsgs() async {
     int? testCount = await databaseMethods.getCount(
-        currentUser!.username!, widget.messageUser.username!);
+        currentUser!.email!, widget.messageUser.email!);
     setStateIfMounted(() {
       count = testCount;
     });
@@ -37,7 +37,7 @@ class _MessageTileState extends State<UserTile> {
 
   getLastMessage() async {
     Message? myTestMessage = await databaseMethods.getLastMessage(
-        widget.messageUser.username!, currentUser!.username!);
+        widget.messageUser.email!, currentUser!.email!);
     setStateIfMounted(() {
       myMessage = myTestMessage;
     });

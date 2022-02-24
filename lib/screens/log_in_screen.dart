@@ -5,6 +5,7 @@ import 'package:ChatApp/screens/home_page.dart';
 import 'package:ChatApp/screens/sign_up_screen.dart';
 import 'package:ChatApp/services/auth.dart';
 import 'package:ChatApp/services/shared_pref.dart';
+import 'package:ChatApp/widgets/custom_progress_indicator.dart';
 import 'package:ChatApp/widgets/submit_button.dart';
 import 'package:ChatApp/widgets/text_field.dart';
 import 'package:flutter/material.dart';
@@ -81,9 +82,7 @@ class _LogInScreenState extends State<LogInScreen> {
       child: Scaffold(
           body: isLoading
               ? Container(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                  child: CustomProgressIndicator(),
                 )
               : SingleChildScrollView(
                   physics: BouncingScrollPhysics(),

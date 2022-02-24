@@ -1,4 +1,5 @@
 import 'package:ChatApp/constants.dart';
+import 'package:ChatApp/widgets/custom_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sizer/sizer.dart';
@@ -57,7 +58,7 @@ class _PhotoWithStateState extends State<PhotoWithState> {
             width: widget.radius,
             fit: BoxFit.cover,
             imageUrl: widget.photoUrl!,
-            placeholder: (context, url) => CircularProgressIndicator(),
+            placeholder: (context, url) => CustomProgressIndicator(),
             errorWidget: (context, url, error) => Icon(Icons.error),
             maxHeightDiskCache: 80,
             maxWidthDiskCache: 80,

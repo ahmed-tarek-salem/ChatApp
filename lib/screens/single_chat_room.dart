@@ -5,6 +5,7 @@ import 'package:ChatApp/models/user.dart';
 import 'package:ChatApp/providers/user_provider.dart';
 import 'package:ChatApp/screens/home_page.dart';
 import 'package:ChatApp/screens/user_profile.dart';
+import 'package:ChatApp/widgets/custom_progress_indicator.dart';
 import 'package:ChatApp/widgets/message_tile.dart';
 import 'package:ChatApp/widgets/photo_with_state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -66,8 +67,8 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
     });
     String photoUrl =
         await databaseMethods.uploadImageToStorge(file, imageMessageId);
-    await databaseMethods.sendMessage(widget.messageUser.username!,
-        myCurrentUser!.username!, photoUrl, myCurrentUser!.uid, true, counter!);
+    await databaseMethods.sendMessage(widget.messageUser.email!,
+        myCurrentUser!.email!, photoUrl, myCurrentUser!.uid, true, counter!);
     setStateIfMounted(() {
       // file=null;
       isLoading = false;
@@ -113,8 +114,8 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
   submitMessage() async {
     String message = messageController.text;
     messageController.clear();
-    await databaseMethods.sendMessage(widget.messageUser.username!,
-        myCurrentUser!.username!, message, myCurrentUser!.uid, false, counter!);
+    await databaseMethods.sendMessage(widget.messageUser.email!,
+        myCurrentUser!.email!, message, myCurrentUser!.uid, false, counter!);
 
     counterHandle();
   }
@@ -125,7 +126,7 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
 
   counterHandle() async {
     int? counttest = await databaseMethods.getCount(
-        widget.messageUser.username!, myCurrentUser!.username!);
+        widget.messageUser.email!, myCurrentUser!.email!);
     setStateIfMounted(() {
       counter = counttest;
     });
@@ -133,7 +134,7 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
 
   clearCount() async {
     await databaseMethods.clearCount(
-        widget.messageUser.username!, myCurrentUser!.username!);
+        widget.messageUser.email!, myCurrentUser!.email!);
   }
 
   getUserLocation() async {
@@ -219,15 +220,13 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
             child: StreamBuilder<QuerySnapshot>(
               stream: refChats
                   .doc(databaseMethods.returnNameOfChat(
-                      widget.messageUser.username!, myCurrentUser!.username!))
+                      widget.messageUser.email!, myCurrentUser!.email!))
                   .collection('chatmessages')
                   .orderBy('timestamp', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return CustomProgressIndicator();
                 } else {
                   return ListView.builder(
                       reverse: true,

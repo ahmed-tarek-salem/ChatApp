@@ -24,15 +24,4 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
     await DatabaseMethods().upDateUsersInfo(updatedUser, currentUserId);
   }
-
-  // getLastMessages(User currentUser) async {
-  //   List<String> allUsersNames = await databaseMethods.allUsers(currentUser);
-  //   List<String> allChatsNames = [];
-  //   for (int i = 0; i < allUsersNames.length; i++) {
-  //     String nameOfChat = await databaseMethods.returnNameOfChat(
-  //         currentUser.username!, allUsersNames[i]);
-  //     allChatsNames.add(nameOfChat);
-  //   }
-  //   databaseMethods.listOfLastMessages(allChatsNames);
-  // }
 }

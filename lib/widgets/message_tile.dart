@@ -2,6 +2,7 @@ import 'package:ChatApp/constants.dart';
 import 'package:ChatApp/models/user.dart';
 import 'package:ChatApp/providers/user_provider.dart';
 import 'package:ChatApp/screens/image.dart';
+import 'package:ChatApp/widgets/custom_progress_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ChatApp/screens/home_page.dart';
@@ -65,9 +66,7 @@ class _MessageTileState extends State<MessageTile> {
                     //  : BorderRadius.only(topLeft: Radius.circular(50)),
                     child: CachedNetworkImage(
                   imageUrl: widget.message!,
-                  placeholder: (context, string) => Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                  placeholder: (context, string) => CustomProgressIndicator(),
                   errorWidget: (context, url, error) => Icon(Icons.error),
                   alignment: widget.messageSender!.uid != myCurrentUser!.uid
                       ? Alignment.centerLeft

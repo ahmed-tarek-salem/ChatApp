@@ -5,6 +5,7 @@ import 'package:ChatApp/providers/user_provider.dart';
 import 'package:ChatApp/screens/home_page.dart';
 import 'package:ChatApp/screens/image.dart';
 import 'package:ChatApp/screens/user_profile.dart';
+import 'package:ChatApp/widgets/custom_progress_indicator.dart';
 import 'package:ChatApp/widgets/photo_with_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -65,11 +66,11 @@ class _PostTileState extends State<PostTile> {
     DocumentSnapshot doc = await refPosts.doc(widget.myPost.postId).get();
     if (doc.exists) {
       doc.reference.delete();
+      Reference firebaseStorageRef =
+          FirebaseStorage.instance.ref().child('image_${widget.myPost.postId}');
+      await firebaseStorageRef.delete();
     }
     //delete uploaded image from storage
-    Reference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child('image_${widget.myPost.postId}');
-    await firebaseStorageRef.delete();
 
     // print('third step');
     // //delete activity feed notifications
@@ -95,9 +96,7 @@ class _PostTileState extends State<PostTile> {
     return Column(
       children: [
         postUser == null
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
+            ? CustomProgressIndicator()
             : Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -216,8 +215,7 @@ class _PostTileState extends State<PostTile> {
             child: CachedNetworkImage(
               fit: BoxFit.cover,
               imageUrl: widget.myPost.mediaUrl!,
-              placeholder: (context, url) =>
-                  Center(child: CircularProgressIndicator()),
+              placeholder: (context, url) => CustomProgressIndicator(),
               errorWidget: (context, url, error) => Icon(Icons.error),
               maxHeightDiskCache: 300,
               maxWidthDiskCache: 300,
