@@ -1,11 +1,13 @@
 import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/models/user.dart';
+import 'package:ChatApp/data/models/user.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/screens/home_page.dart';
-import 'package:ChatApp/screens/single_chat_room.dart';
-import 'package:ChatApp/services/followers.dart';
-import 'package:ChatApp/widgets/custom_progress_indicator.dart';
-import 'package:ChatApp/widgets/submit_button.dart';
+import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/screens/single_chat_room.dart';
+import 'package:ChatApp/data/services/followers_services.dart';
+import 'package:ChatApp/view/screens/single_chat_room.dart';
+import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
+import 'package:ChatApp/view/widgets/submit_button.dart';
+import 'package:ChatApp/view/screens/single_chat_room.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +77,7 @@ class _UserProfileState extends State<UserProfile> {
                 height: 55.0.h,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                imageUrl: widget._user.photo!,
+                imageUrl: widget._user.userSpec!.photo,
                 placeholder: (context, url) => CustomProgressIndicator(),
                 errorWidget: (context, url, error) => Icon(Icons.error),
               ),
@@ -110,11 +112,11 @@ class _UserProfileState extends State<UserProfile> {
               child: Column(
             children: [
               Text(
-                widget._user.username!,
+                widget._user.userSpec!.username,
                 style: myGoogleFont(Colors.black, 23.0.sp, FontWeight.w500),
               ),
               Text(
-                widget._user.bio!,
+                widget._user.userSpec!.bio,
                 textAlign: TextAlign.center,
                 style: myGoogleFont(Colors.grey[550], 11.5.sp, FontWeight.w400),
               ),

@@ -1,14 +1,15 @@
 import 'dart:io';
 
 import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/models/post.dart';
-import 'package:ChatApp/screens/upload.dart';
-import 'package:ChatApp/widgets/custom_progress_indicator.dart';
-import 'package:ChatApp/widgets/post_tile.dart';
+import 'package:ChatApp/data/models/post.dart';
+import 'package:ChatApp/view/screens/uploading_screen.dart';
+import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
+import 'package:ChatApp/view/widgets/post_tile.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ChatApp/screens/home_page.dart';
+import 'package:ChatApp/view/screens/home_page.dart';
 import 'package:sizer/sizer.dart';
 
 class NewsFeed extends StatefulWidget {
@@ -42,7 +43,7 @@ class _NewsFeedState extends State<NewsFeed> {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return Upload(file);
+            return UploadingScreen(file);
           },
         ),
       );
@@ -65,7 +66,7 @@ class _NewsFeedState extends State<NewsFeed> {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return Upload(file);
+            return UploadingScreen(file);
           },
         ),
       );

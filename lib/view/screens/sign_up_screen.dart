@@ -1,12 +1,14 @@
 import 'package:ChatApp/constants.dart';
+import 'package:ChatApp/data/services/user_services.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/screens/home_page.dart';
-import 'package:ChatApp/screens/log_in_screen.dart';
-import 'package:ChatApp/services/auth.dart';
-import 'package:ChatApp/services/shared_pref.dart';
-import 'package:ChatApp/widgets/custom_progress_indicator.dart';
-import 'package:ChatApp/widgets/submit_button.dart';
-import 'package:ChatApp/widgets/text_field.dart';
+import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/screens/login_screen.dart';
+import 'package:ChatApp/data/services/auth_services.dart';
+import 'package:ChatApp/data/services/shared_pref.dart';
+import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
+import 'package:ChatApp/view/widgets/submit_button.dart';
+import 'package:ChatApp/view/widgets/text_field.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -30,14 +32,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController userName = TextEditingController();
-  AuthMethods authMethods = AuthMethods();
+  AuthServices authServices = AuthServices();
+  UserServices userServices = UserServices();
 
   signUp(BuildContext context) async {
     if (formkey.currentState!.validate()) {
       setState(() {
         isLoading = true;
       });
-      String? uid = await authMethods.signUp(email.text, password.text);
+      String? uid = await authServices.signUp(email.text, password.text);
       if (uid != null) {
         Map<String, dynamic> myMap = {
           'email': email.text,
@@ -48,7 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           'uid': uid,
           'state': true
         };
-        await databaseMethods.setUserInfo(myMap, uid);
+        await userServices.setUserInfo(myMap, uid);
         await SharedPref().markTheUser(uid);
         Provider.of<UserProvider>(context, listen: false).defineUser(uid);
         Navigator.pushReplacement(
@@ -210,7 +213,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return LogInScreen();
+                                return LoginScreen();
                               }));
                             },
                             child: Text(

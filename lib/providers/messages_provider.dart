@@ -1,7 +1,7 @@
-import 'package:ChatApp/message.dart';
-import 'package:ChatApp/models/user.dart';
-import 'package:ChatApp/screens/home_page.dart';
-import 'package:ChatApp/services/database.dart';
+import 'package:ChatApp/data/models/message.dart';
+import 'package:ChatApp/data/models/user.dart';
+import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/data/services/database.dart';
 import 'package:flutter/cupertino.dart';
 
 class MessagesProvider extends ChangeNotifier {

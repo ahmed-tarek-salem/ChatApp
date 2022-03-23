@@ -1,5 +1,5 @@
 import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/widgets/custom_progress_indicator.dart';
+import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sizer/sizer.dart';

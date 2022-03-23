@@ -1,11 +1,11 @@
 import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/models/user.dart';
+import 'package:ChatApp/data/models/user.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/screens/image.dart';
-import 'package:ChatApp/widgets/custom_progress_indicator.dart';
+import 'package:ChatApp/view/screens/image.dart';
+import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:ChatApp/screens/home_page.dart';
+import 'package:ChatApp/view/screens/home_page.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timeago/timeago.dart' as timeago;

@@ -1,13 +1,16 @@
 import 'dart:io';
 
 import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/models/user.dart';
+import 'package:ChatApp/data/models/user.dart';
+import 'package:ChatApp/data/services/message_services.dart';
+import 'package:ChatApp/data/services/storage_services.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/screens/home_page.dart';
-import 'package:ChatApp/screens/user_profile.dart';
-import 'package:ChatApp/widgets/custom_progress_indicator.dart';
-import 'package:ChatApp/widgets/message_tile.dart';
-import 'package:ChatApp/widgets/photo_with_state.dart';
+import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/screens/user_profile.dart';
+
+import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
+import 'package:ChatApp/view/widgets/message_tile.dart';
+import 'package:ChatApp/view/widgets/photo_with_state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -35,6 +38,8 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
   String imageMessageId = Uuid().v4();
   User? myCurrentUser;
   bool isFirstTime = true;
+  MessageServices messageServices = MessageServices();
+  StorageServices storageServices = StorageServices();
 
   @override
   void dispose() {
@@ -66,11 +71,10 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
       isLoading = true;
     });
     String photoUrl =
-        await databaseMethods.uploadImageToStorge(file, imageMessageId);
-    await databaseMethods.sendMessage(widget.messageUser.email!,
+        await storageServices.uploadImageToStorge(file, imageMessageId);
+    await messageServices.sendMessage(widget.messageUser.email!,
         myCurrentUser!.email!, photoUrl, myCurrentUser!.uid, true, counter!);
     setStateIfMounted(() {
-      // file=null;
       isLoading = false;
     });
   }
@@ -114,17 +118,17 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
   submitMessage() async {
     String message = messageController.text;
     messageController.clear();
-    await databaseMethods.sendMessage(widget.messageUser.email!,
+    await messageServices.sendMessage(widget.messageUser.email!,
         myCurrentUser!.email!, message, myCurrentUser!.uid, false, counter!);
 
-    counterHandle();
+    counterHandling();
   }
 
   void setStateIfMounted(f) {
     if (mounted) setState(f);
   }
 
-  counterHandle() async {
+  counterHandling() async {
     int? counttest = await databaseMethods.getCount(
         widget.messageUser.email!, myCurrentUser!.email!);
     setStateIfMounted(() {
@@ -137,13 +141,8 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
         widget.messageUser.email!, myCurrentUser!.email!);
   }
 
-  getUserLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-    Placemark placemark = placemarks[0];
-    String formattedPlace = '${placemark.locality} , ${placemark.country}';
+  getCurrentLocation() async {
+    String formattedPlace = await getCurrentLocation();
     messageController.text = formattedPlace;
   }
 
@@ -151,7 +150,7 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
   void didChangeDependencies() {
     if (isFirstTime) {
       myCurrentUser = Provider.of<UserProvider>(context, listen: false).myUser;
-      counterHandle();
+      counterHandling();
       clearCount();
       isFirstTime = false;
     }
@@ -189,13 +188,13 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
                   tag: 'ProfilePhoto',
                   child: PhotoWithState(
                       state: widget.messageUser.state,
-                      photoUrl: widget.messageUser.photo,
+                      photoUrl: widget.messageUser.userSpec!.photo,
                       radius: 8.5.h,
                       radiusOfBall: 7,
                       colorOfBall: Colors.white),
                 ),
                 title: Text(
-                  widget.messageUser.username!,
+                  widget.messageUser.userSpec!.username,
                   style: myGoogleFont(Colors.black, 14.0.sp, FontWeight.w500),
                 ),
                 trailing: GestureDetector(
@@ -222,7 +221,7 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
                   .doc(databaseMethods.returnNameOfChat(
                       widget.messageUser.email!, myCurrentUser!.email!))
                   .collection('chatmessages')
-                  .orderBy('timestamp', descending: true)
+                  .orderBy('timeStamp', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -241,9 +240,9 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
                         return MessageTile(
                           message: snapshot.data?.docs[index]['message'],
                           messageSender: messageSender,
-                          isPhoto: snapshot.data?.docs[index]['isphoto'],
+                          isPhoto: snapshot.data?.docs[index]['isPhoto'],
                           timeStamp: DateTime.fromMillisecondsSinceEpoch(
-                              snapshot.data?.docs[index]['timestamp']),
+                              snapshot.data?.docs[index]['timeStamp']),
                         );
                       });
                 }
@@ -301,7 +300,7 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
                             child: Icon(Icons.my_location, size: 19.2.sp),
                             //location pin
                             onTap: () {
-                              getUserLocation();
+                              getCurrentLocation();
                             },
                           ),
                         ],

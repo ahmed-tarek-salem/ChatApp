@@ -1,20 +1,21 @@
 import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/screens/home_page.dart';
-import 'package:ChatApp/screens/chat_rooms.dart';
-import 'package:ChatApp/screens/log_in_screen.dart';
-import 'package:ChatApp/screens/sign_up_screen.dart';
-import 'package:ChatApp/services/shared_pref.dart';
+import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/screens/chat_rooms.dart';
+import 'package:ChatApp/view/screens/login_screen.dart';
+import 'package:ChatApp/view/screens/sign_up_screen.dart';
+import 'package:ChatApp/data/services/shared_pref.dart';
+import 'package:ChatApp/view/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
-class WelcomeScreen extends StatefulWidget {
+class SplashScreen extends StatefulWidget {
   @override
-  _WelcomeScreenState createState() => _WelcomeScreenState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void didChangeDependencies() async {
     final newUser = await SharedPref().checkIfLoggedIn();
@@ -72,40 +73,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 onTap: () {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
-                    return LogInScreen();
+                    return LoginScreen();
                   }));
                 },
                 child: CustomButton(Colors.white, 'Log in', kGreenColor)),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class CustomButton extends StatelessWidget {
-  final Color myColor;
-  final String myTitle;
-  final Color titleColor;
-  CustomButton(this.myColor, this.myTitle, this.titleColor);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 8.0.h,
-      margin: EdgeInsets.symmetric(horizontal: 12.5.w),
-      decoration: BoxDecoration(
-        color: myColor,
-        borderRadius: BorderRadius.circular(30.0.sp),
-      ),
-      child: Center(
-        child: Text(
-          myTitle,
-          style: GoogleFonts.montserrat(
-              textStyle: TextStyle(
-                  fontSize: 15.0.sp,
-                  color: titleColor,
-                  fontWeight: FontWeight.w500)),
         ),
       ),
     );

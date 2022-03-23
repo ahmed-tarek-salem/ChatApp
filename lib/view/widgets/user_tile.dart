@@ -1,11 +1,11 @@
 import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/message.dart';
-import 'package:ChatApp/models/user.dart';
+import 'package:ChatApp/data/models/message.dart';
+import 'package:ChatApp/data/models/user.dart';
 import 'package:ChatApp/providers/messages_provider.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/screens/single_chat_room.dart';
-import 'package:ChatApp/screens/home_page.dart';
-import 'package:ChatApp/widgets/photo_with_state.dart';
+import 'package:ChatApp/view/screens/single_chat_room.dart';
+import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/widgets/photo_with_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -103,7 +103,7 @@ class _MessageTileState extends State<UserTile> {
                     children: [
                       PhotoWithState(
                         state: widget.messageUser.state,
-                        photoUrl: widget.messageUser.photo,
+                        photoUrl: widget.messageUser.userSpec!.photo,
                         radius: 8.5.h,
                         radiusOfBall: 5.4.sp,
                         colorOfBall: count == 0 || count == null
@@ -119,7 +119,7 @@ class _MessageTileState extends State<UserTile> {
                         children: [
                           Container(
                             child: Text(
-                              widget.messageUser.username!,
+                              widget.messageUser.userSpec!.username,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               softWrap: false,

@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/models/user.dart';
+import 'package:ChatApp/data/models/user.dart';
+import 'package:ChatApp/data/services/storage_services.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/screens/home_page.dart';
-import 'package:ChatApp/widgets/custom_progress_indicator.dart';
-import 'package:ChatApp/widgets/submit_button.dart';
+import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
+import 'package:ChatApp/view/widgets/submit_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -12,19 +13,20 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-class Upload extends StatefulWidget {
+class UploadingScreen extends StatefulWidget {
   File? file;
-  Upload(this.file);
+  UploadingScreen(this.file);
   @override
-  _UploadState createState() => _UploadState();
+  _UploadingScreenState createState() => _UploadingScreenState();
 }
 
-class _UploadState extends State<Upload> {
+class _UploadingScreenState extends State<UploadingScreen> {
   User? userUploadingPost;
   bool isUploading = false;
   TextEditingController locationController = TextEditingController();
   TextEditingController captionController = TextEditingController();
   String postId = Uuid().v4();
+  StorageServices storageServices = StorageServices();
 
   @override
   void initState() {
@@ -50,15 +52,9 @@ class _UploadState extends State<Upload> {
     );
   }
 
-  getUserLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-    Placemark placemark = placemarks[0];
-    String formattedPlace =
-        ' ${placemark.country}, ${placemark.locality}, ${placemark.street}';
-    locationController.text = formattedPlace;
+  getCurrentLocation() async {
+    String formatedPlace = await getCurrentLocation();
+    locationController.text = formatedPlace;
   }
 
   handleSubmit() async {
@@ -66,10 +62,10 @@ class _UploadState extends State<Upload> {
       isUploading = true;
     });
     String photoUrl =
-        await databaseMethods.uploadImageToStorge(widget.file, postId);
+        await storageServices.uploadImageToStorge(widget.file, postId);
     databaseMethods.createPostInFirestore(
         currentUserId: userUploadingPost!.uid,
-        currentUsername: userUploadingPost!.username,
+        currentUsername: userUploadingPost!.userSpec!.username,
         description: captionController.text,
         location: locationController.text,
         mediaUrl: photoUrl,
@@ -98,8 +94,6 @@ class _UploadState extends State<Upload> {
                       width: double.infinity,
                       child: Center(
                         child: Container(
-                          // aspectRatio: 16 / 9,
-
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               fit: BoxFit.fitWidth,
@@ -113,7 +107,7 @@ class _UploadState extends State<Upload> {
                     ListTile(
                       leading: CircleAvatar(
                         backgroundImage:
-                            NetworkImage(userUploadingPost!.photo!),
+                            NetworkImage(userUploadingPost!.userSpec!.photo),
                         radius: 35,
                       ),
                       title: TextField(
@@ -159,9 +153,7 @@ class _UploadState extends State<Upload> {
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                         color: Colors.grey[500],
-                        onPressed: () {
-                          getUserLocation();
-                        },
+                        onPressed: getCurrentLocation,
                         icon: Icon(
                           Icons.my_location,
                           color: Colors.white,
@@ -170,7 +162,6 @@ class _UploadState extends State<Upload> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        //if(isUploading)
                         await handleSubmit();
                         Navigator.pop(context);
                       },

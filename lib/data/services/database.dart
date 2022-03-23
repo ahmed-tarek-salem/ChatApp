@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:ChatApp/message.dart';
+import 'package:ChatApp/data/models/message.dart';
+import 'package:ChatApp/data/models/user_spec.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:ChatApp/models/user.dart' as am;
+import 'package:ChatApp/data/models/user.dart' as am;
 
 class DatabaseMethods {
   var url;
@@ -21,53 +22,6 @@ class DatabaseMethods {
       FirebaseFirestore.instance.collection('followers');
   final CollectionReference refFollowing =
       FirebaseFirestore.instance.collection('following');
-
-  setUserInfo(var userMap, var uid) {
-    return FirebaseFirestore.instance.collection('users').doc(uid).set(userMap);
-  }
-
-  getUserInfo(String? uid) async {
-    DocumentSnapshot doc = await refUsers.doc(uid).get();
-    return am.User.fromDocument(doc);
-  }
-
-  Future<String> uploadImageToStorge(File? imageFile, String imageId) async {
-    FirebaseStorage storage = FirebaseStorage.instance;
-    Reference ref = storage.ref().child('image_$imageId');
-    TaskSnapshot taskSnapshot = await ref.putFile(imageFile!);
-    return await taskSnapshot.ref.getDownloadURL();
-    //الفرق بين uploadTask و TaskSnapshot ال await
-  }
-
-  upDateUsersInfo(am.User updatedUser, String currentUserId) {
-    try {
-      refUsers.doc(currentUserId).update(
-        {
-          'photo': updatedUser.photo,
-          'bio': updatedUser.bio,
-          'username': updatedUser.username
-        },
-      );
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<List<String>> allUsers(am.User currentUser) async {
-    List<String> listOfUsers = [];
-    try {
-      QuerySnapshot querySnapshot =
-          await refUsers.where('uid', isNotEqualTo: currentUser.uid).get();
-      for (int i = 0; i < querySnapshot.docs.length; i++) {
-        listOfUsers.add(querySnapshot.docs[i]['username']);
-      }
-      print(listOfUsers);
-      return listOfUsers;
-    } catch (e) {
-      print(e);
-      throw (e);
-    }
-  }
 
   //setPhotoToFirebase(String uid, var url){
   /* return FirebaseFirestore.instance.collection('users').where(
@@ -91,31 +45,6 @@ class DatabaseMethods {
   getUsernameFromFirebase(String uid) async {
     DocumentSnapshot doc = await refUsers.doc(uid).get();
     return doc['username'];
-  }
-
-  sendMessage(String friendEmail, String currentUserEmail, String message,
-      String? myCurrentUserUid, bool isPhoto, int counter) async {
-    String fullname = returnNameOfChat(friendEmail, currentUserEmail);
-    await refChats.doc(fullname).collection('chatmessages').add({
-      'message': message,
-      'timestamp': DateTime.now().millisecondsSinceEpoch,
-      'sentby': myCurrentUserUid,
-      'isphoto': isPhoto,
-    });
-    //send message to counter unseen messages
-    await increaseCount(counter, friendEmail, currentUserEmail);
-
-    //send message to last messages collection
-    await refChats
-        .doc(fullname)
-        .collection('unseenmessages')
-        .doc('lastmessage')
-        .set({
-      'message': message,
-      'timestamp': DateTime.now().millisecondsSinceEpoch,
-      'sentby': myCurrentUserUid,
-      'isphoto': isPhoto,
-    });
   }
 
   returnNameOfChat(String name1, String name2) {
@@ -144,15 +73,6 @@ class DatabaseMethods {
   //   }
   //   print(mapOfChatNamesAndLastMessages);
   // }
-
-  increaseCount(int count, String friendEmail, String currentUserEmail) async {
-    String fullname = returnNameOfChat(friendEmail, currentUserEmail);
-    await refChats
-        .doc(fullname)
-        .collection('unseenmessages')
-        .doc(friendEmail)
-        .set({'count': count + 1});
-  }
 
   Future<int?> getCount(String friendEmail, String currentUserEmail) async {
     try {
@@ -207,17 +127,6 @@ class DatabaseMethods {
     }
   }
 
-  logOut(String? uid) async {
-    try {
-      FirebaseAuth _auth = FirebaseAuth.instance;
-      await refUsers.doc(uid).update({'state': false});
-      await _auth.signOut();
-      print('Logged out');
-    } catch (e) {
-      print(e);
-    }
-  }
-
   addToNewsFeed(String idOfNotifier) async {
     try {
       DocumentSnapshot doc = await refUsers.doc(idOfNotifier).get();
@@ -225,8 +134,8 @@ class DatabaseMethods {
       await refFeeds.doc(idOfNotifier).set({
         'timestamp': DateTime.now(),
         'type': 'update',
-        'username': myUser.username,
-        'photo': myUser.photo
+        'username': myUser.userSpec!.username,
+        'photo': myUser.userSpec!.photo
       });
     } catch (e) {
       print(e);
@@ -255,6 +164,4 @@ class DatabaseMethods {
       print(e);
     }
   }
-
-  //we stopped here
 }

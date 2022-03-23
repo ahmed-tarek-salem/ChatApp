@@ -1,13 +1,13 @@
 import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/models/user.dart';
+import 'package:ChatApp/data/models/user.dart';
 import 'package:ChatApp/providers/messages_provider.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/screens/newsfeed.dart';
-import 'package:ChatApp/screens/edit_profile.dart';
-import 'package:ChatApp/services/database.dart';
-import 'package:ChatApp/services/shared_pref.dart';
-import 'package:ChatApp/widgets/custom_progress_indicator.dart';
-import 'package:ChatApp/widgets/photo_with_state.dart';
+import 'package:ChatApp/view/screens/newsfeed.dart';
+import 'package:ChatApp/view/screens/edit_profile.dart';
+import 'package:ChatApp/data/services/database.dart';
+import 'package:ChatApp/data/services/shared_pref.dart';
+import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
+import 'package:ChatApp/view/widgets/photo_with_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
     await retrieveData();
     var userProvider = Provider.of<UserProvider>(context, listen: false);
     uid = userProvider.myUser?.uid;
-    photoUrl = userProvider.myUser?.photo;
+    photoUrl = userProvider.myUser?.userSpec!.photo;
     // await userProvider.getLastMessages(userProvider.myUser!);
     setState(() {
       isLoading = false;
@@ -116,8 +116,10 @@ class _HomePageState extends State<HomePage> {
                         )
                       : PhotoWithState(
                           colorOfBall: Colors.white,
-                          photoUrl:
-                              Provider.of<UserProvider>(context).myUser?.photo,
+                          photoUrl: Provider.of<UserProvider>(context)
+                              .myUser
+                              ?.userSpec!
+                              .photo,
                           radiusOfBall: 0,
                           radius: 7.5.h,
                           state: true,

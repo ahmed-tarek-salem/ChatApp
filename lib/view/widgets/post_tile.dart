@@ -1,12 +1,12 @@
 import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/models/post.dart';
-import 'package:ChatApp/models/user.dart';
+import 'package:ChatApp/data/models/post.dart';
+import 'package:ChatApp/data/models/user.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/screens/home_page.dart';
-import 'package:ChatApp/screens/image.dart';
-import 'package:ChatApp/screens/user_profile.dart';
-import 'package:ChatApp/widgets/custom_progress_indicator.dart';
-import 'package:ChatApp/widgets/photo_with_state.dart';
+import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/screens/image.dart';
+import 'package:ChatApp/view/screens/user_profile.dart';
+import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
+import 'package:ChatApp/view/widgets/photo_with_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -114,7 +114,7 @@ class _PostTileState extends State<PostTile> {
                           );
                         },
                         child: PhotoWithState(
-                          photoUrl: postUser!.photo,
+                          photoUrl: postUser!.userSpec!.photo,
                           colorOfBall: Colors.white,
                           radius: 40.0.sp,
                           radiusOfBall: 5.3.sp,
@@ -138,7 +138,7 @@ class _PostTileState extends State<PostTile> {
                               );
                             },
                             child: Text(
-                              postUser!.username!,
+                              postUser!.userSpec!.username,
                               style: myGoogleFont(
                                   Colors.black, 15.0.sp, FontWeight.w500),
                             ),

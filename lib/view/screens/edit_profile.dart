@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/models/user.dart';
+import 'package:ChatApp/data/models/user.dart';
+import 'package:ChatApp/data/models/user_spec.dart';
+import 'package:ChatApp/data/services/storage_services.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/screens/home_page.dart';
-import 'package:ChatApp/widgets/custom_progress_indicator.dart';
-import 'package:ChatApp/widgets/submit_button.dart';
+import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
+import 'package:ChatApp/view/widgets/submit_button.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +25,7 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController bioController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   GlobalKey<ScaffoldState> scaffoldkey = GlobalKey<ScaffoldState>();
+  StorageServices storageServices = StorageServices();
 
   User? myUser;
 
@@ -61,19 +65,9 @@ class _EditProfileState extends State<EditProfile> {
       });
   }
 
-  // loadImage() async {
-  //   test = await databaseMethods.getPhotoFromFirebase(widget.uid);
-  //   String bio = await databaseMethods.getBioFromFirebase(widget.uid);
-  //   String username = await databaseMethods.getUsernameFromFirebase(widget.uid);
-  //   setStateIfMounted(() {
-  //     url = test;
-  //     bioController.text = bio;
-  //     usernameController.text = username;
-  //   });
-  // }
   loadData() {
-    bioController.text = myUser!.bio!;
-    usernameController.text = myUser!.username!;
+    bioController.text = myUser!.userSpec!.bio;
+    usernameController.text = myUser!.userSpec!.username;
   }
 
   selectImage(parentContext) {
@@ -142,28 +136,15 @@ class _EditProfileState extends State<EditProfile> {
 
   updateProfile() async {
     String photoUrl = file != null
-        ? await databaseMethods.uploadImageToStorge(file, myUser!.uid!)
+        ? await storageServices.uploadImageToStorge(file, myUser!.uid!)
         : '';
-    User? updatedUser = User(
+    UserSpec? updatedUserSpec = UserSpec(
         bio: bioController.text,
-        photo: file == null ? myUser!.photo! : photoUrl,
+        photo: file == null ? myUser!.userSpec!.photo : photoUrl,
         username: usernameController.text);
-    print('Its the ${updatedUser.photo}');
-    // User? updatedUser = User(
-    //     bio: bioController.text,
-    //     photo: myUser!.photo!,
-    //     username: usernameController.text);
     Provider.of<UserProvider>(context, listen: false)
-        .updateUserInfo(updatedUser, myUser!.uid!);
+        .updateUserInfo(updatedUserSpec, myUser!.uid!);
   }
-
-  // showPhotoIcon() async {
-  //   DocumentSnapshot doc = await refUsers.doc(widget.uid).get();
-  //   String? url = doc['photo'];
-  //   setStateIfMounted(() {
-  //     photoUrl = url;
-  //   });
-  // }
 
   handleSubmit() async {
     if (formKey.currentState!.validate()) {
@@ -174,13 +155,11 @@ class _EditProfileState extends State<EditProfile> {
       setState(() {
         isLoading = false;
       });
-      // showPhotoIcon();
       SnackBar snackBar = SnackBar(
         content: Text('Profile Updated'),
       );
 
       scaffoldkey.currentState!.showSnackBar(snackBar);
-      //databaseMethods.addToNewsFeed(widget.uid);
     }
   }
 
@@ -217,7 +196,7 @@ class _EditProfileState extends State<EditProfile> {
                                     height: 45.0.h,
                                     width: 45.0.h,
                                     fit: BoxFit.cover,
-                                    imageUrl: myUser!.photo!,
+                                    imageUrl: myUser!.userSpec!.photo,
                                     placeholder: (context, url) =>
                                         CustomProgressIndicator(),
                                     errorWidget: (context, url, error) =>

@@ -1,7 +1,7 @@
+import 'package:ChatApp/providers/chat_rooms_provider.dart';
 import 'package:ChatApp/providers/messages_provider.dart';
-import 'package:ChatApp/providers/test_provider.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/screens/wrapper.dart';
+import 'package:ChatApp/view/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,11 +19,6 @@ void main() async {
     ),
   );
 }
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await Firebase.initializeApp();
-//   runApp(MyApp());
-// }
 
 class MyApp extends StatelessWidget {
   @override
@@ -41,17 +36,16 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) {
-            return TestProvider();
+            return ChatRoomsProvider();
           },
-        )
+        ),
       ],
       child: Sizer(builder: (context, orientation, type) {
         return MaterialApp(
           theme: ThemeData(scaffoldBackgroundColor: Colors.white),
           debugShowCheckedModeBanner: false,
-          builder: DevicePreview.appBuilder, // Add the builder here
-
-          home: Wrapper(),
+          builder: DevicePreview.appBuilder,
+          home: SplashScreen(),
         );
       }),
     );

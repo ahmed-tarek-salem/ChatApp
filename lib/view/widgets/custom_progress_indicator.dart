@@ -8,9 +8,9 @@ class CustomProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SpinKitDoubleBounce(
+      child: SpinKitRing(
         color: kGreenColor,
-        size: 50.0,
+        size: 30.0,
       ),
     );
   }

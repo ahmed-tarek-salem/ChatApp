@@ -1,30 +1,29 @@
 import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/models/user.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/screens/home_page.dart';
-import 'package:ChatApp/screens/sign_up_screen.dart';
-import 'package:ChatApp/services/auth.dart';
-import 'package:ChatApp/services/shared_pref.dart';
-import 'package:ChatApp/widgets/custom_progress_indicator.dart';
-import 'package:ChatApp/widgets/submit_button.dart';
-import 'package:ChatApp/widgets/text_field.dart';
+import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/screens/sign_up_screen.dart';
+import 'package:ChatApp/data/services/auth_services.dart';
+import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
+import 'package:ChatApp/view/widgets/submit_button.dart';
+import 'package:ChatApp/view/widgets/text_field.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
-class LogInScreen extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   @override
-  _LogInScreenState createState() => _LogInScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LogInScreenState extends State<LogInScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   var formkey = GlobalKey<FormState>();
   String error = '';
   bool isLoading = false;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
-  AuthMethods authMethods = AuthMethods();
+  AuthServices authServices = AuthServices();
   @override
   void dispose() {
     email.dispose();
@@ -37,7 +36,7 @@ class _LogInScreenState extends State<LogInScreen> {
       setState(() {
         isLoading = true;
       });
-      var uid = await authMethods.logIn(email.text, password.text);
+      var uid = await authServices.logIn(email.text, password.text);
       if (uid == null) {
         setState(() {
           isLoading = false;
@@ -49,25 +48,19 @@ class _LogInScreenState extends State<LogInScreen> {
                 title: Text("Email or password isn't correct"),
                 children: <Widget>[
                   SimpleDialogOption(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        'Ok',
-                        style: TextStyle(color: Colors.red),
-                      )),
-                  // SimpleDialogOption(
-                  //     onPressed: () => Navigator.pop(context),
-                  //     child: Text('Cancel')),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Ok',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
                 ],
               );
             });
       } else {
-        await SharedPref().markTheUser(uid);
-        User user = await Provider.of<UserProvider>(context, listen: false)
-            .defineUser(uid);
-        print(user.photo);
-
+        await Provider.of<UserProvider>(context, listen: false).defineUser(uid);
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
           return HomePage();
