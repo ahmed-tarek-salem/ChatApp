@@ -21,6 +21,8 @@ class UserServices {
           bio: updatedUser.bio,
           username: updatedUser.username);
       await refUsers.doc(currentUserId).update(userSpec.toDocument());
+      print('User serv');
+
       return true;
     } catch (e) {
       print(e);
@@ -36,7 +38,6 @@ class UserServices {
       for (int i = 0; i < querySnapshot.docs.length; i++) {
         listOfUsers.add(querySnapshot.docs[i]['username']);
       }
-      print(listOfUsers);
       return listOfUsers;
     } catch (e) {
       print(e);

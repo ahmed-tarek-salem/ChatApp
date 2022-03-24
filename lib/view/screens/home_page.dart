@@ -36,6 +36,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String? uid;
+  bool isInit = true;
   // getUser() async {
   //   DocumentSnapshot doc = await refUsers.doc(uid).get();
   //   myCurrentUser = User.fromDocument(doc);
@@ -50,6 +51,7 @@ class _HomePageState extends State<HomePage> {
   bool isLoading = true;
 
   retrieveData() async {
+    print('First');
     final userAlreadyLoggedInId = await SharedPref().checkIfLoggedIn();
     if (userAlreadyLoggedInId != true) {
       await Provider.of<UserProvider>(context, listen: false)
@@ -60,14 +62,17 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void didChangeDependencies() async {
-    await retrieveData();
-    var userProvider = Provider.of<UserProvider>(context, listen: false);
-    uid = userProvider.myUser?.uid;
-    photoUrl = userProvider.myUser?.userSpec!.photo;
-    // await userProvider.getLastMessages(userProvider.myUser!);
-    setState(() {
-      isLoading = false;
-    });
+    if (isInit) {
+      await retrieveData();
+      var userProvider = Provider.of<UserProvider>(context, listen: false);
+      uid = userProvider.myUser?.uid;
+      photoUrl = userProvider.myUser?.userSpec!.photo;
+      // await userProvider.getLastMessages(userProvider.myUser!);
+      setState(() {
+        isLoading = false;
+      });
+      isInit = false;
+    }
 
     super.didChangeDependencies();
   }

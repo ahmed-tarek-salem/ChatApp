@@ -25,6 +25,8 @@ class UserProvider with ChangeNotifier {
     myUser?.userSpec!.photo = updatedUserSpec.photo;
     myUser?.userSpec!.username = updatedUserSpec.username;
     notifyListeners();
+    print(' USer Provider');
+
     await UserServices().updateUsersInfo(updatedUserSpec, currentUserId);
   }
 
