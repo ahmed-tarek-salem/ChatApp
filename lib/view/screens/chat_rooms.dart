@@ -3,7 +3,7 @@ import 'package:ChatApp/data/models/user.dart';
 import 'package:ChatApp/data/services/auth_services.dart';
 import 'package:ChatApp/providers/chat_rooms_provider.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/screens/home_layout_screen.dart';
 import 'package:ChatApp/view/screens/user_profile.dart';
 import 'package:ChatApp/view/screens/splash_screen.dart';
 import 'package:ChatApp/data/services/shared_pref.dart';
@@ -19,8 +19,6 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class ChatRooms extends StatefulWidget {
-  final String userId;
-  ChatRooms(this.userId);
   @override
   _ChatRoomsState createState() => _ChatRoomsState();
 }

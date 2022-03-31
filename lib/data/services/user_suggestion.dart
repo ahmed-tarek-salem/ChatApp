@@ -1,5 +1,5 @@
 import 'package:ChatApp/data/models/user.dart';
-import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/screens/home_layout_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 

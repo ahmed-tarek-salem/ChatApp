@@ -1,7 +1,7 @@
 import 'package:ChatApp/constants.dart';
 import 'package:ChatApp/data/services/user_services.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/screens/home_layout_screen.dart';
 import 'package:ChatApp/view/screens/login_screen.dart';
 import 'package:ChatApp/data/services/auth_services.dart';
 import 'package:ChatApp/data/services/shared_pref.dart';
@@ -58,7 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return HomePage();
+              return HomeLayoutScreen();
             },
           ),
         );

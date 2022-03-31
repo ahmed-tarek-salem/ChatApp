@@ -1,5 +1,5 @@
 import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/screens/home_layout_screen.dart';
 import 'package:ChatApp/view/screens/chat_rooms.dart';
 import 'package:ChatApp/view/screens/login_screen.dart';
 import 'package:ChatApp/view/screens/sign_up_screen.dart';
@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) {
-          return HomePage();
+          return HomeLayoutScreen();
         }),
       );
     }

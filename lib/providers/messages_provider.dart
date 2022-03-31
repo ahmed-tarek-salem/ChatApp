@@ -1,6 +1,6 @@
 import 'package:ChatApp/data/models/message.dart';
 import 'package:ChatApp/data/models/user.dart';
-import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/screens/home_layout_screen.dart';
 import 'package:ChatApp/data/services/database.dart';
 import 'package:flutter/cupertino.dart';
 

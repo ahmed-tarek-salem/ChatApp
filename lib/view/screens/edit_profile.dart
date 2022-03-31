@@ -5,7 +5,7 @@ import 'package:ChatApp/data/models/user_spec.dart';
 import 'package:ChatApp/data/services/storage_services.dart';
 import 'package:ChatApp/providers/edit_profile_provider.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/screens/home_layout_screen.dart';
 import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
 import 'package:ChatApp/view/widgets/submit_button.dart';
 

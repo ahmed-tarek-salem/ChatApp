@@ -1,6 +1,6 @@
 import 'package:ChatApp/constants.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/view/screens/home_page.dart';
+import 'package:ChatApp/view/screens/home_layout_screen.dart';
 import 'package:ChatApp/view/screens/sign_up_screen.dart';
 import 'package:ChatApp/data/services/auth_services.dart';
 import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await Provider.of<UserProvider>(context, listen: false).defineUser(uid);
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
-          return HomePage();
+          return HomeLayoutScreen();
         }));
       }
     }

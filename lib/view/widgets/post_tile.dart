@@ -2,8 +2,8 @@ import 'package:ChatApp/constants.dart';
 import 'package:ChatApp/data/models/post.dart';
 import 'package:ChatApp/data/models/user.dart';
 import 'package:ChatApp/providers/user_provider.dart';
-import 'package:ChatApp/view/screens/home_page.dart';
-import 'package:ChatApp/view/screens/image.dart';
+import 'package:ChatApp/view/screens/home_layout_screen.dart';
+import 'package:ChatApp/view/screens/full_image_screen.dart';
 import 'package:ChatApp/view/screens/user_profile.dart';
 import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
 import 'package:ChatApp/view/widgets/photo_with_state.dart';
@@ -208,7 +208,7 @@ class _PostTileState extends State<PostTile> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) {
-                  return ImageScreen(widget.myPost.mediaUrl);
+                  return FullImageScreen(widget.myPost.mediaUrl);
                 }),
               );
             },

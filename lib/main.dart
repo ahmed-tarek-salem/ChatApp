@@ -1,5 +1,6 @@
 import 'package:ChatApp/providers/chat_rooms_provider.dart';
 import 'package:ChatApp/providers/edit_profile_provider.dart';
+import 'package:ChatApp/providers/home_layout_provider.dart';
 import 'package:ChatApp/providers/messages_provider.dart';
 import 'package:ChatApp/providers/user_provider.dart';
 import 'package:ChatApp/view/screens/splash_screen.dart';
@@ -44,6 +45,11 @@ class MyApp extends StatelessWidget {
           create: (context) {
             return EditProfileProvider(
                 Provider.of<UserProvider>(context, listen: false).myUser!);
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return HomeLayoutProvider();
           },
         ),
       ],

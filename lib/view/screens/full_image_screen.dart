@@ -2,9 +2,9 @@ import 'package:ChatApp/view/widgets/custom_progress_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class ImageScreen extends StatelessWidget {
+class FullImageScreen extends StatelessWidget {
   final String? photoUrl;
-  ImageScreen(this.photoUrl);
+  FullImageScreen(this.photoUrl);
   @override
   Widget build(BuildContext context) {
     return Container(
