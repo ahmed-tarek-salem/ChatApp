@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyCCPil70Wx7ODQ4L-LZf9rc5UB79ExEf7o</string>
+	<key>GCM_SENDER_ID</key>
+	<string>18718766269</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ahmedtsalem.chatapp</string>
+	<key>PROJECT_ID</key>
+	<string>chatty-670c5</string>
+	<key>STORAGE_BUCKET</key>
+	<string>chatty-670c5.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:18718766269:ios:8c18fb7abdc463508cb3d4</string>
+</dict>
+</plist>
