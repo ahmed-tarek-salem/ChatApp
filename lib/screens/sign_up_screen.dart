@@ -75,7 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             title: Text('An error occured'),
             content: Text('Something went wrong'),
             actions: [
-              FlatButton(
+              TextButton(
                 child: Text('ok'),
                 onPressed: () {
                   Navigator.pop(context);

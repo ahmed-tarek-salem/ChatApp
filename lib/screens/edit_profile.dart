@@ -177,8 +177,7 @@ class _EditProfileState extends State<EditProfile> {
       SnackBar snackBar = SnackBar(
         content: Text('Profile Updated'),
       );
-
-      scaffoldkey.currentState!.showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       //databaseMethods.addToNewsFeed(widget.uid);
     }
   }
