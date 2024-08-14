@@ -25,7 +25,7 @@ class _NewsFeedState extends State<NewsFeed> {
   imageFromGallery(context) async {
     Navigator.pop(context);
     final pickedFile = await ImagePicker()
-        .getImage(source: ImageSource.gallery, imageQuality: 70);
+        .pickImage(source: ImageSource.gallery, imageQuality: 70);
     if (pickedFile != null)
       setStateIfMounted(
         () {
@@ -45,7 +45,7 @@ class _NewsFeedState extends State<NewsFeed> {
   imageFromCamera(context) async {
     Navigator.pop(context);
     final pickedFile = await ImagePicker()
-        .getImage(source: ImageSource.camera, imageQuality: 70);
+        .pickImage(source: ImageSource.camera, imageQuality: 70);
     if (pickedFile != null)
       setStateIfMounted(() {
         file = File(pickedFile.path);

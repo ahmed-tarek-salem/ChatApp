@@ -44,7 +44,7 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
   imageFromGallery(context) async {
     Navigator.pop(context);
     final pickedFile = await ImagePicker()
-        .getImage(source: ImageSource.gallery, imageQuality: 85);
+        .pickImage(source: ImageSource.gallery, imageQuality: 85);
     setStateIfMounted(() {
       file = File(pickedFile!.path);
     });
@@ -53,7 +53,8 @@ class _SingleChatRoomState extends State<SingleChatRoom> {
 
   imageFromCamera(context) async {
     Navigator.pop(context);
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
     setStateIfMounted(() {
       file = File(pickedFile!.path);
     });

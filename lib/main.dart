@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           },
         )
       ],
-      child: Sizer(builder: (context, orientation, type) {
+      child: ResponsiveSizer(builder: (context, orientation, type) {
         return MaterialApp(
           theme: ThemeData(scaffoldBackgroundColor: Colors.white),
           debugShowCheckedModeBanner: false,
