@@ -1,3 +1,4 @@
+import 'package:ChatApp/firebase_options.dart';
 import 'package:ChatApp/providers/messages_provider.dart';
 import 'package:ChatApp/providers/test_provider.dart';
 import 'package:ChatApp/providers/user_provider.dart';
@@ -11,7 +12,9 @@ import 'package:device_preview/device_preview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     DevicePreview(
       enabled: false,
@@ -45,7 +48,7 @@ class MyApp extends StatelessWidget {
           },
         )
       ],
-      child: Sizer(builder: (context, orientation, type) {
+      child: ResponsiveSizer(builder: (context, orientation, type) {
         return MaterialApp(
           theme: ThemeData(scaffoldBackgroundColor: Colors.white),
           debugShowCheckedModeBanner: false,
