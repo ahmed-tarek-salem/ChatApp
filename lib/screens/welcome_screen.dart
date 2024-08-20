@@ -52,7 +52,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 textAlign: TextAlign.center,
                 style: GoogleFonts.montserrat(
                   textStyle: TextStyle(
-                      fontSize: 11.5.sp,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w300,
                       color: Colors.grey),
                 ),
@@ -103,7 +103,7 @@ class CustomButton extends StatelessWidget {
           myTitle,
           style: GoogleFonts.montserrat(
               textStyle: TextStyle(
-                  fontSize: 15.0.sp,
+                  fontSize: 18.0.sp,
                   color: titleColor,
                   fontWeight: FontWeight.w500)),
         ),

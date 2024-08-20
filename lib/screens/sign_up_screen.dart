@@ -205,7 +205,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           Text(
                             'Already registered? ',
                             style: myGoogleFont(
-                                Colors.black, 12.0.sp, FontWeight.w300),
+                                Colors.black, 14.0.sp, FontWeight.w300),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -217,7 +217,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             child: Text(
                               'Sign in',
                               style: myGoogleFont(
-                                  Colors.greenAccent, 14.0.sp, FontWeight.w500),
+                                  Colors.greenAccent, 16.0.sp, FontWeight.w600),
                             ),
                           )
                         ],

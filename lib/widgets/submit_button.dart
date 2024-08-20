@@ -17,7 +17,7 @@ class SubmitButton extends StatelessWidget {
       child: Center(
         child: Text(
           myLabel,
-          style: myGoogleFont(Colors.white, 15.0.sp, FontWeight.w500),
+          style: myGoogleFont(Colors.white, 18.0.sp, FontWeight.w500),
         ),
       ),
     );

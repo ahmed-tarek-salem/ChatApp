@@ -116,26 +116,31 @@ class _LogInScreenState extends State<LogInScreen> {
                                 ),
                               ),
                             ),
-                            Positioned(
-                              bottom: 10,
-                              left: 23.0.w,
-                              child: Row(
-                                children: [
-                                  Text('Not a member? ',
-                                      style: myGoogleFont(Colors.white, 12.3.sp,
-                                          FontWeight.w300)),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) {
-                                        return SignUpScreen();
-                                      }));
-                                    },
-                                    child: Text('Sign up',
-                                        style: myGoogleFont(Colors.greenAccent,
-                                            14.0.sp, FontWeight.w500)),
-                                  ),
-                                ],
+                            Positioned.fill(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Not a member? ',
+                                        style: myGoogleFont(Colors.white, 14.sp,
+                                            FontWeight.w500)),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return SignUpScreen();
+                                        }));
+                                      },
+                                      child: Text('Sign up',
+                                          style: myGoogleFont(
+                                              Colors.greenAccent,
+                                              16.0.sp,
+                                              FontWeight.w700)),
+                                    ),
+                                  ],
+                                ),
                               ),
                             )
                           ],
@@ -185,7 +190,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                   'Forgot Password?',
                                   style: GoogleFonts.montserrat(
                                       textStyle: TextStyle(color: kGreenColor),
-                                      fontSize: 12.0.sp),
+                                      fontSize: 14.0.sp),
                                 ),
                                 const SizedBox(
                                   height: 10.0,
